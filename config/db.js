@@ -2,6 +2,7 @@
 
 const { Sequelize } = require('sequelize');
 
+// TODO: Agregar variables de entorno para la conexión a la DB
 const sequelize = new Sequelize('cobrandola', 'feradmin', 'feradmin123', {
     host: '127.0.0.1',
     dialect: 'postgres',
