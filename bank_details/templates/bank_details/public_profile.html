@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, noarchive" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ owner.display_name|default:owner.email }} — Payment Details</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+      .wrap { max-width: 720px; margin: 0 auto; }
+      h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+      .card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .meta { color: #6b7280; font-size: 0.9rem; }
+      .value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
+      button { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px; cursor: pointer; background: #f9fafb; }
+      button:active { transform: translateY(1px); }
+      .kind { font-weight: 600; }
+      .footer { margin-top: 20px; color: #9ca3af; font-size: 0.85rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Payment details for {{ owner.display_name|default:owner.email }}</h1>
+
+      {% if details %}
+        {% for d in details %}
+          <div class="card">
+            <div class="row">
+              <div>
+                <div class="kind">
+                  {% if d.kind == 'CLABE' %}CLABE{% elif d.kind == 'CARD' %}Card{% else %}Account{% endif %}
+                  {% if d.brand %} — {{ d.brand }}{% endif %}
+                </div>
+                <div class="meta">
+                  {% if d.bank_name %}{{ d.bank_name }} • {% endif %}
+                  {% if d.alias %}{{ d.alias }}{% endif %}
+                </div>
+                <div class="value" id="val-{{ forloop.counter }}">{{ d.value }}</div>
+              </div>
+              <div>
+                <button onclick="copyValue('val-{{ forloop.counter }}')">Copy</button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No public details yet.</p>
+      {% endif %}
+
+      <div class="footer">
+        Shared via cobrando-la • If this is yours, update your details in your dashboard.
+      </div>
+    </div>
+
+    <script>
+      async function copyValue(id) {
+        const el = document.getElementById(id);
+        const text = el?.textContent?.trim() || "";
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("Copied!");
+        } catch (e) {
+          console.error(e);
+          alert("Failed to copy");
+        }
+      }
+    </script>
+  </body>
+</html>
