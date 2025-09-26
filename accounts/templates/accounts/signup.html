@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign up</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+    form { max-width: 520px; margin: 0 auto; display: grid; gap: 12px; }
+    input, button { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    button { cursor: pointer; }
+    .errorlist { color: #b91c1c; list-style: none; padding: 0; }
+  </style>
+</head>
+<body>
+  <form method="post" novalidate>
+    <h1>Create account</h1>
+    {% csrf_token %}
+    {% if form.errors %}
+      <ul class="errorlist">
+        {% for field, errors in form.errors.items %}
+          {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+        {% endfor %}
+        {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- UserCreationForm ya expone email, display_name, password1, password2 -->
+    {{ form.as_p }}
+
+    <button type="submit">Sign up</button>
+    <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </form>
+</body>
+</html>
