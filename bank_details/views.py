@@ -18,7 +18,7 @@ def public_profile(request, public_slug: str):
 
 @login_required
 def dashboard(request):
-    details = BankDetail.objects.filter(owner=request.user).order_by("kind", "-updated_at")
+    details = BankDetails.objects.filter(owner=request.user).order_by("kind", "-updated_at")
     return render(
         request,
         "bank_details/dashboard.html",
