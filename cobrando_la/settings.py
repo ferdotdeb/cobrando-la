@@ -120,6 +120,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -129,3 +133,8 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
+# Slugs que no pueden usarse como enlace público
+RESERVED_PUBLIC_SLUGS = {
+    "admin", "u", "accounts", "login", "logout", "signup",
+    "dashboard", "static", "media", "api", "robots.txt", "favicon.ico",
+}

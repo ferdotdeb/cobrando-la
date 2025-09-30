@@ -1,70 +1,160 @@
+{% load tz %}
+{% load static %}
+{% load inline_svg from inline_svg %}
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="robots" content="noindex, noarchive" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ owner.display_name|default:owner.email }} — Payment Details</title>
-    <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-      .wrap { max-width: 720px; margin: 0 auto; }
-      h1 { font-size: 1.25rem; margin: 0 0 1rem; }
-      .card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
-      .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-      .meta { color: #6b7280; font-size: 0.9rem; }
-      .value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
-      button { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px; cursor: pointer; background: #f9fafb; }
-      button:active { transform: translateY(1px); }
-      .kind { font-weight: 600; }
-      .footer { margin-top: 20px; color: #9ca3af; font-size: 0.85rem; }
-    </style>
+    <title>{{ owner.display_name|default:owner.email }} — Datos de pago</title>
+    <link rel="stylesheet" href="{% static 'css/public_profile.css' %}">
   </head>
   <body>
     <div class="wrap">
-      <h1>Payment details for {{ owner.display_name|default:owner.email }}</h1>
+      <div class="header">
+        <h1>Datos de pago de {{ owner.display_name|default:owner.email }}</h1>
+        <div class="share-section">
+          <button class="btn btn-primary" onclick="copyPublicLink()" aria-label="Compartir enlace público">
+            📋 Compartir enlace
+          </button>
+          <button class="btn" onclick="toggleQR()" aria-label="Mostrar código QR">
+            📱 Mostrar QR
+          </button>
+        </div>
+      </div>
 
       {% if details %}
-        {% for d in details %}
-          <div class="card">
-            <div class="row">
-              <div>
-                <div class="kind">
-                  {% if d.kind == 'CLABE' %}CLABE{% elif d.kind == 'CARD' %}Card{% else %}Account{% endif %}
-                  {% if d.brand %} — {{ d.brand }}{% endif %}
+        {# CLABE Section #}
+        {% with clabe_items=details|dictsort:"kind"|slice:":99" %}
+          {% for d in clabe_items %}
+            {% if d.kind == 'CLABE' %}
+              {% if forloop.first %}
+              {% endif %}
+              <div class="card">
+                <div class="card-header">
+                  <span class="kind-label">CLABE Interbancaria</span>
+                  {% if d.bank_code %}
+                    <span class="badge badge-code">{{ d.bank_code }}</span>
+                  {% endif %}
                 </div>
-                <div class="meta">
-                  {% if d.bank_name %}{{ d.bank_name }} • {% endif %}
-                  {% if d.alias %}{{ d.alias }}{% endif %}
+                {% if d.bank_name or d.alias %}
+                  <div class="meta">
+                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
+                  </div>
+                {% endif %}
+                <div class="value-container">
+                  <div class="value" id="val-clabe-{{ forloop.counter }}">{{ d.value }}</div>
+                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar CLABE">
+                    📋 Copiar
+                  </button>
                 </div>
-                <div class="value" id="val-{{ forloop.counter }}">{{ d.value }}</div>
+                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
               </div>
-              <div>
-                <button onclick="copyValue('val-{{ forloop.counter }}')">Copy</button>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+
+        {# Card Section #}
+        {% with card_items=details|dictsort:"kind"|slice:":99" %}
+          {% for d in card_items %}
+            {% if d.kind == 'CARD' %}
+              {% if forloop.first %}
+              {% endif %}
+              <div class="card">
+                <div class="card-header">
+                  <span class="kind-label">Tarjeta de Debito</span>
+                  {% if d.brand == 'VISA' %}
+                    <span class="badge badge-visa">
+                      {% inline_svg 'brands/visa.svg' %}
+                    </span>
+                  {% elif d.brand == 'MASTERCARD' %}
+                    <span class="badge badge-mastercard">
+                      {% inline_svg 'brands/mc.svg' %}
+                    </span>
+                  {% elif d.brand %}
+                    <span class="badge badge-other">{{ d.brand }}</span>
+                  {% endif %}
+                </div>
+                {% if d.bank_name or d.alias %}
+                  <div class="meta">
+                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
+                  </div>
+                {% endif %}
+                <div class="value-container">
+                  <div class="value" id="val-card-{{ forloop.counter }}">{{ d.value }}</div>
+                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de tarjeta">
+                    📋 Copiar
+                  </button>
+                </div>
+                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
               </div>
-            </div>
-          </div>
-        {% endfor %}
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+
+        {# Account Section #}
+        {% with account_items=details|dictsort:"kind"|slice:":99" %}
+          {% for d in account_items %}
+            {% if d.kind == 'ACCOUNT' %}
+              {% if forloop.first %}
+                <h2 class="section-title">Cuenta</h2>
+              {% endif %}
+              <div class="card">
+                <div class="card-header">
+                  <span class="kind-label">Cuenta</span>
+                </div>
+                {% if d.bank_name or d.alias %}
+                  <div class="meta">
+                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
+                  </div>
+                {% endif %}
+                <div class="value-container">
+                  <div class="value" id="val-account-{{ forloop.counter }}">{{ d.value }}</div>
+                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de cuenta">
+                    📋 Copiar
+                  </button>
+                </div>
+                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
       {% else %}
-        <p>No public details yet.</p>
+        <div class="empty-state">
+          <div class="empty-state-icon">💳</div>
+          <p>Aún no hay datos públicos.</p>
+        </div>
       {% endif %}
 
       <div class="footer">
-        Shared via cobrando-la • If this is yours, update your details in your dashboard.
+        Compartido vía cobrando-la • Si estos NO son tus datos, actualízalos en tu panel.
       </div>
     </div>
 
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" class="qr-modal" onclick="closeQRIfBackdrop(event)">
+      <div class="qr-content">
+        <button class="qr-close" onclick="toggleQR()" aria-label="Cerrar QR">×</button>
+        <div class="qr-title">Código QR</div>
+        <div class="qr-subtitle">Escanea para compartir este enlace</div>
+        <div id="qr-container"></div>
+      </div>
+    </div>
+
+    {% url 'public_profile' public_slug=owner.public_slug as public_path %}
+    
+    <!-- QRCode.js library (davidshimjs version) -->
+    <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+    
+    <!-- Public profile script -->
     <script>
-      async function copyValue(id) {
-        const el = document.getElementById(id);
-        const text = el?.textContent?.trim() || "";
-        try {
-          await navigator.clipboard.writeText(text);
-          alert("Copied!");
-        } catch (e) {
-          console.error(e);
-          alert("Failed to copy");
-        }
-      }
+      // Set public URL as global variable for use in external script
+      window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
     </script>
+    <script src="{% static 'js/public_profile.js' %}"></script>
   </body>
 </html>

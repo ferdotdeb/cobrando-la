@@ -6,13 +6,22 @@
   <title>Dashboard</title>
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-    .wrap { max-width: 820px; margin: 0 auto; }
-    .row { display: flex; gap: 12px; justify-content: space-between; align-items: center; }
-    .card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin: 10px 0; }
+    .wrap { max-width: 880px; margin: 0 auto; }
+    .row { display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin: 12px 0; }
     .value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
     .meta { color: #6b7280; font-size: 0.9rem; }
     .actions a, .actions button { margin-left: 8px; }
+    input[type="text"], input[type="email"] { padding: 10px; border: 1px solid #ddd; border-radius: 8px; width: 100%; }
+    input[type="checkbox"] { transform: scale(1.1); }
     button { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: #f9fafb; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .errorlist { color: #b91c1c; margin: 8px 0 0; padding-left: 16px; }
+    .msgs { margin-bottom: 12px; }
+    .msg { padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
+    .msg.success { background: #ecfdf5; border: 1px solid #34d399; }
+    .msg.error { background: #fef2f2; border: 1px solid #f87171; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #3730a3; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -26,40 +35,116 @@
       </div>
     </div>
 
-    <p class="meta">Below are your current bank details (read-only for now). We’ll add edit forms next.</p>
-
-    {% if details %}
-      {% for d in details %}
-        <div class="card">
-          <div class="row">
-            <div>
-              <strong>
-                {% if d.kind == 'CLABE' %}CLABE{% elif d.kind == 'CARD' %}Card{% else %}Account{% endif %}
-                {% if d.brand %} — {{ d.brand }}{% endif %}
-              </strong>
-              <div class="meta">
-                {% if d.bank_name %}{{ d.bank_name }}{% endif %}
-                {% if d.alias %} • {{ d.alias }}{% endif %}
-                {% if d.is_public %} • Public{% else %} • Private{% endif %}
-              </div>
-              <div class="value" id="val-{{ forloop.counter }}">{{ d.value }}</div>
-            </div>
-            <div class="actions">
-              <button onclick="copyValue('val-{{ forloop.counter }}')">Copy</button>
-            </div>
-          </div>
-        </div>
+    <!-- Mensajes -->
+    <div class="msgs">
+      {% for m in messages %}
+        <div class="msg {{ m.tags }}">{{ m }}</div>
       {% endfor %}
-    {% else %}
-      <p>No bank details yet. You can add CLABE / Card / Account in the next step.</p>
-    {% endif %}
+    </div>
+
+    <!-- CLABE -->
+    <div class="card">
+      <h2>CLABE {% if instances.clabe %}<span class="badge">Saved</span>{% endif %}</h2>
+      <p class="meta">18 digits with checksum. Bank name auto-suggested from bank code, but you can edit it.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="form_kind" value="CLABE" />
+        {{ forms.CLABE.kind }}
+        <div class="grid">
+          <label>CLABE<br>{{ forms.CLABE.value }}</label>
+          <label>Bank name (optional)<br>{{ forms.CLABE.bank_name }}</label>
+        </div>
+        <div class="grid">
+          <label>Alias (optional)<br>{{ forms.CLABE.alias }}</label>
+          <label>Public? {{ forms.CLABE.is_public }}</label>
+        </div>
+        {% if forms.CLABE.errors %}
+          <ul class="errorlist">
+            {% for field, errors in forms.CLABE.errors.items %}
+              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div style="margin-top:10px;">
+          <button type="submit">Save CLABE</button>
+          {% if instances.clabe %}
+            <button type="button" onclick="copyText('{{ instances.clabe.value }}')">Copy CLABE</button>
+            <span class="meta">Bank code: {{ instances.clabe.bank_code }} {% if instances.clabe.bank_name %}• {{ instances.clabe.bank_name }}{% endif %}</span>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+      <h2>Card {% if instances.card %}<span class="badge">Saved</span>{% endif %}</h2>
+      <p class="meta">16 digits, VISA or MasterCard (Luhn validated). Bank name is manual.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="form_kind" value="CARD" />
+        {{ forms.CARD.kind }}
+        <div class="grid">
+          <label>Card number<br>{{ forms.CARD.value }}</label>
+          <label>Bank name (optional)<br>{{ forms.CARD.bank_name }}</label>
+        </div>
+        <div class="grid">
+          <label>Alias (optional)<br>{{ forms.CARD.alias }}</label>
+          <label>Public? {{ forms.CARD.is_public }}</label>
+        </div>
+        {% if forms.CARD.errors %}
+          <ul class="errorlist">
+            {% for field, errors in forms.CARD.errors.items %}
+              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div style="margin-top:10px;">
+          <button type="submit">Save Card</button>
+          {% if instances.card %}
+            <button type="button" onclick="copyText('{{ instances.card.value }}')">Copy Card</button>
+            <span class="meta">{% if instances.card.brand %}Brand: {{ instances.card.brand }}{% endif %}</span>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <!-- Account -->
+    <div class="card">
+      <h2>Account {% if instances.account %}<span class="badge">Saved</span>{% endif %}</h2>
+      <p class="meta">6–20 digits. Bank name is manual.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="form_kind" value="ACCOUNT" />
+        {{ forms.ACCOUNT.kind }}
+        <div class="grid">
+          <label>Account number<br>{{ forms.ACCOUNT.value }}</label>
+          <label>Bank name (optional)<br>{{ forms.ACCOUNT.bank_name }}</label>
+        </div>
+        <div class="grid">
+          <label>Alias (optional)<br>{{ forms.ACCOUNT.alias }}</label>
+          <label>Public? {{ forms.ACCOUNT.is_public }}</label>
+        </div>
+        {% if forms.ACCOUNT.errors %}
+          <ul class="errorlist">
+            {% for field, errors in forms.ACCOUNT.errors.items %}
+              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div style="margin-top:10px;">
+          <button type="submit">Save Account</button>
+          {% if instances.account %}
+            <button type="button" onclick="copyText('{{ instances.account.value }}')">Copy Account</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
   </div>
 
   <script>
-    async function copyValue(id) {
-      const el = document.getElementById(id);
-      const text = el?.textContent?.trim() || "";
-      try { await navigator.clipboard.writeText(text); alert("Copied!"); }
+    async function copyText(text) {
+      try { await navigator.clipboard.writeText((text || "").trim()); alert("Copied!"); }
       catch (e) { console.error(e); alert("Failed to copy"); }
     }
   </script>

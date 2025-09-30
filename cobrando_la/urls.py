@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from bank_details.views import public_profile  # ya lo tienes
+from bank_details.views import public_profile
 
 urlpatterns = [
     path("admin/", admin.site.urls),

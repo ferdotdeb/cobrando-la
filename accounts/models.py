@@ -1,11 +1,29 @@
 from __future__ import annotations
 
+import re
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
+
+SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+def _reserved_set():
+    default = {
+        "admin", "u", "accounts", "login", "logout", "signup",
+        "dashboard", "static", "media", "api", "robots.txt", "favicon.ico",
+    }
+    return set(getattr(settings, "RESERVED_PUBLIC_SLUGS", default))
+
+def validate_public_slug(value: str):
+    if value in _reserved_set():
+        raise ValidationError("This public link is reserved. Choose another.")
+    if not SLUG_RE.fullmatch(value):
+        raise ValidationError("Use lowercase letters, numbers, and hyphens only.")
 
 class UserManager(BaseUserManager):
     def _create_user(self, email: str, password: str | None, **extra_fields):
@@ -42,7 +60,12 @@ def _generate_public_slug(base: str | None = None) -> str:
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     display_name = models.CharField(max_length=150, blank=True)
-    public_slug = models.SlugField(max_length=32, unique=True, blank=True)
+    public_slug = models.SlugField(
+        max_length=32,
+        unique=True,
+        blank=True,
+        validators=[validate_public_slug],  # ← añade el validador
+    )
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -66,11 +89,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.public_slug:
             base = self.display_name or (self.email.split("@")[0] if self.email else None)
             slug = _generate_public_slug(base)
-            # Make sure the slug is unique
+            # Evita reservados y colisiones
             Model = type(self)
-            while Model.objects.filter(public_slug=slug).exists():
+            while slug in _reserved_set() or Model.objects.filter(public_slug=slug).exists():
                 slug = _generate_public_slug(base)
             self.public_slug = slug
+        else:
+            # Si viene definido (p.ej. desde admin), valida
+            validate_public_slug(self.public_slug)
+
         super().save(*args, **kwargs)
     
     @property
