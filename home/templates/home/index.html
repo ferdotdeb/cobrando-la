@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cobrando-la - Tu sitio de pagos</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'signup' %}">Registrarse</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Mi Sitio</a>
+            {% else %}
+                <a href="{% url 'login' %}">Acceder</a>
+            {% endif %}
+        </nav>
+    </header>
+    
+    <main>
+        <h1>Bienvenido a Cobrando-la</h1>
+        <p>Tu plataforma para recibir pagos fácilmente</p>
+        <!-- Resto del contenido informativo -->
+    </main>
+</body>
+</html>

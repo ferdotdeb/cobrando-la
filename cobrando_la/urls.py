@@ -6,7 +6,7 @@ from home.views import index
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("", index, name="home"),  # Página de bienvenida
+    path("", index, name="home"),  # Landing Page
     path("dashboard/", include("bank_details.urls")),  # Dashboard
     path("u/<slug:public_slug>/", public_profile, name="public_profile"),
 ]
