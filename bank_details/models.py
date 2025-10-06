@@ -43,14 +43,14 @@ def detect_card_brand(number: str) -> str:
       - Si no coincide: OTHER
     """
     if len(number) != 16:
-        return "OTHER"
+        return "Other"
     if number.startswith("4"):
-        return "VISA"
+        return "Visa"
     two = int(number[:2])
     four = int(number[:4])
     if 51 <= two <= 55 or 2221 <= four <= 2720:
-        return "MASTERCARD"
-    return "OTHER"
+        return "MasterCard"
+    return "Other"
 
 
 # Mapeo mínimo (extiende cuando quieras)
@@ -60,6 +60,8 @@ BANK_CODE_MAP = {
     "014": "Santander",
     "021": "HSBC",
     "072": "Banorte",
+    "638": "Nu Bank",
+    "722": "Mercado Pago"
     # TODO: añade más códigos si lo deseas
 }
 
@@ -70,9 +72,9 @@ class BankDetails(models.Model):
         ACCOUNT = "ACCOUNT", "Account"
     
     class Brand(models.TextChoices):
-        VISA = "VISA", "VISA"
-        MASTERCARD = "MASTERCARD", "MasterCard"
-        OTHER = "OTHER", "Other"
+        VISA = "Visa", "Visa"
+        MASTERCARD = "Mastercard", "Mastercard"
+        OTHER = "Other", "Other"
 
     class BankNameSource(models.TextChoices):
         AUTO = "AUTO", "Auto-detected"

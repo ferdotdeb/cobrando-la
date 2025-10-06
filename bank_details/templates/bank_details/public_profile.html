@@ -8,18 +8,22 @@
     <meta name="robots" content="noindex, noarchive" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ owner.display_name|default:owner.email }} — Datos de pago</title>
-    <link rel="stylesheet" href="{% static 'css/public_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/public_profile.css' %}?v=2">
   </head>
   <body>
     <div class="wrap">
       <div class="header">
         <h1>Datos de pago de {{ owner.display_name|default:owner.email }}</h1>
         <div class="share-section">
+          <a href="{% url 'dashboard' %}" class="btn" aria-label="Volver al dashboard">
+            Regresar al Dashboard
+          </a>
           <button class="btn btn-primary" onclick="copyPublicLink()" aria-label="Compartir enlace público">
-            📋 Compartir enlace
+            Copiar enlace para compartir
           </button>
           <button class="btn" onclick="toggleQR()" aria-label="Mostrar código QR">
-            📱 Mostrar QR
+            Mostrar QR para compartir
           </button>
         </div>
       </div>
@@ -46,7 +50,7 @@
                 <div class="value-container">
                   <div class="value" id="val-clabe-{{ forloop.counter }}">{{ d.value }}</div>
                   <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar CLABE">
-                    📋 Copiar
+                    Copiar
                   </button>
                 </div>
                 <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
@@ -64,11 +68,11 @@
               <div class="card">
                 <div class="card-header">
                   <span class="kind-label">Tarjeta de Debito</span>
-                  {% if d.brand == 'VISA' %}
+                  {% if d.brand == 'Visa' %}
                     <span class="badge badge-visa">
                       {% inline_svg 'brands/visa.svg' %}
                     </span>
-                  {% elif d.brand == 'MASTERCARD' %}
+                  {% elif d.brand == 'MasterCard' %}
                     <span class="badge badge-mastercard">
                       {% inline_svg 'brands/mc.svg' %}
                     </span>
@@ -84,7 +88,7 @@
                 <div class="value-container">
                   <div class="value" id="val-card-{{ forloop.counter }}">{{ d.value }}</div>
                   <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de tarjeta">
-                    📋 Copiar
+                    Copiar
                   </button>
                 </div>
                 <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
@@ -112,7 +116,7 @@
                 <div class="value-container">
                   <div class="value" id="val-account-{{ forloop.counter }}">{{ d.value }}</div>
                   <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de cuenta">
-                    📋 Copiar
+                    Copiar
                   </button>
                 </div>
                 <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>

@@ -4,12 +4,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crear cuenta</title>
+  <title>Regístrate</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
   <form method="post" novalidate>
-    <h1>Crear cuenta</h1>
+    <h1>Regístrate</h1>
     <p class="subtitle">Regístrate con email o teléfono</p>
     
     {% csrf_token %}
@@ -82,7 +83,7 @@
     </div>
 
     <button type="submit">Crear cuenta</button>
-    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar sesión</a></p>
+    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
   </form>
 </body>
 </html>

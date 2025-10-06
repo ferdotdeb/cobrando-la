@@ -5,16 +5,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
   <div class="wrap">
     <div class="row">
-      <h1>Welcome, {{ owner.display_name|default:owner.email }}</h1>
+      <h1>Hola de nuevo {{ owner.display_name|default:owner.email }}!</h1>
       <div>
-        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
         &nbsp;|&nbsp;
-        <a href="{% url 'public_profile' public_slug=owner.public_slug %}" target="_blank">View public page</a>
+        <a href="{% url 'public_profile' public_slug=owner.public_slug %}" target="_blank">Ver tus datos de pago</a>
       </div>
     </div>
 
@@ -27,19 +28,19 @@
 
     <!-- CLABE -->
     <div class="card">
-      <h2>CLABE {% if instances.clabe %}<span class="badge">Saved</span>{% endif %}</h2>
-      <p class="meta">18 digits with checksum. Bank name auto-suggested from bank code, but you can edit it.</p>
+      <h2>CLABE {% if instances.clabe %}<span class="badge">Guardado</span>{% endif %}</h2>
+      <p class="meta">18 dígitos (con verificación) El nombre del banco se sugiere automáticamente con la verificación del código bancario, pero puedes editarlo.</p>
       <form method="post" novalidate>
         {% csrf_token %}
         <input type="hidden" name="form_kind" value="CLABE" />
         {{ forms.CLABE.kind }}
         <div class="grid">
-          <label>CLABE<br>{{ forms.CLABE.value }}</label>
-          <label>Bank name (optional)<br>{{ forms.CLABE.bank_name }}</label>
+          <label>CLABE Interbancaria<br>{{ forms.CLABE.value }}</label>
+          <label>Nombre del banco (opcional)<br>{{ forms.CLABE.bank_name }}</label>
         </div>
         <div class="grid">
-          <label>Alias (optional)<br>{{ forms.CLABE.alias }}</label>
-          <label>Public? {{ forms.CLABE.is_public }}</label>
+          <label>Alias (opcional)<br>{{ forms.CLABE.alias }}</label>
+          <label>¿Mostrar estos datos? {{ forms.CLABE.is_public }}</label>
         </div>
         {% if forms.CLABE.errors %}
           <ul class="errorlist">
@@ -49,10 +50,10 @@
           </ul>
         {% endif %}
         <div style="margin-top:10px;">
-          <button type="submit">Save CLABE</button>
+          <button type="submit">Guardar CLABE</button>
           {% if instances.clabe %}
-            <button type="button" onclick="copyText('{{ instances.clabe.value }}')">Copy CLABE</button>
-            <span class="meta">Bank code: {{ instances.clabe.bank_code }} {% if instances.clabe.bank_name %}• {{ instances.clabe.bank_name }}{% endif %}</span>
+            <button type="button" onclick="copyText('{{ instances.clabe.value }}')">Copiar CLABE</button>
+            <span class="meta">Código bancario: {{ instances.clabe.bank_code }} {% if instances.clabe.bank_name %}• {{ instances.clabe.bank_name }}{% endif %}</span>
           {% endif %}
         </div>
       </form>
@@ -60,19 +61,19 @@
 
     <!-- Card -->
     <div class="card">
-      <h2>Card {% if instances.card %}<span class="badge">Saved</span>{% endif %}</h2>
-      <p class="meta">16 digits, VISA or MasterCard (Luhn validated). Bank name is manual.</p>
+      <h2>Tarjeta {% if instances.card %}<span class="badge">Guardado</span>{% endif %}</h2>
+      <p class="meta">16 dígitos, Visa o MasterCard (Validado con algoritmo Luhn). El nombre del banco debes ingresarlo de forma manual.</p>
       <form method="post" novalidate>
         {% csrf_token %}
         <input type="hidden" name="form_kind" value="CARD" />
         {{ forms.CARD.kind }}
         <div class="grid">
-          <label>Card number<br>{{ forms.CARD.value }}</label>
-          <label>Bank name (optional)<br>{{ forms.CARD.bank_name }}</label>
+          <label>Número de tarjeta<br>{{ forms.CARD.value }}</label>
+          <label>Nombre del banco (opcional)<br>{{ forms.CARD.bank_name }}</label>
         </div>
         <div class="grid">
-          <label>Alias (optional)<br>{{ forms.CARD.alias }}</label>
-          <label>Public? {{ forms.CARD.is_public }}</label>
+          <label>Alias (opcional)<br>{{ forms.CARD.alias }}</label>
+          <label>¿Mostrar estos datos? {{ forms.CARD.is_public }}</label>
         </div>
         {% if forms.CARD.errors %}
           <ul class="errorlist">
@@ -82,10 +83,10 @@
           </ul>
         {% endif %}
         <div style="margin-top:10px;">
-          <button type="submit">Save Card</button>
+          <button type="submit">Guardar Tarjeta</button>
           {% if instances.card %}
-            <button type="button" onclick="copyText('{{ instances.card.value }}')">Copy Card</button>
-            <span class="meta">{% if instances.card.brand %}Brand: {{ instances.card.brand }}{% endif %}</span>
+            <button type="button" onclick="copyText('{{ instances.card.value }}')">Copiar Tarjeta</button>
+            <span class="meta">{% if instances.card.brand %}Emisor: {{ instances.card.brand }}{% endif %}</span>
           {% endif %}
         </div>
       </form>
@@ -93,19 +94,19 @@
 
     <!-- Account -->
     <div class="card">
-      <h2>Account {% if instances.account %}<span class="badge">Saved</span>{% endif %}</h2>
-      <p class="meta">6–20 digits. Bank name is manual.</p>
+      <h2>Cuenta bancaria {% if instances.account %}<span class="badge">Guardado</span>{% endif %}</h2>
+      <p class="meta">6–20 dígitos. El nombre del banco es manual.</p>
       <form method="post" novalidate>
         {% csrf_token %}
         <input type="hidden" name="form_kind" value="ACCOUNT" />
         {{ forms.ACCOUNT.kind }}
         <div class="grid">
-          <label>Account number<br>{{ forms.ACCOUNT.value }}</label>
-          <label>Bank name (optional)<br>{{ forms.ACCOUNT.bank_name }}</label>
+          <label>Número de cuenta<br>{{ forms.ACCOUNT.value }}</label>
+          <label>Nombre del banco (opcional)<br>{{ forms.ACCOUNT.bank_name }}</label>
         </div>
         <div class="grid">
-          <label>Alias (optional)<br>{{ forms.ACCOUNT.alias }}</label>
-          <label>Public? {{ forms.ACCOUNT.is_public }}</label>
+          <label>Alias (opcional)<br>{{ forms.ACCOUNT.alias }}</label>
+          <label>¿Mostrar estos datos? {{ forms.ACCOUNT.is_public }}</label>
         </div>
         {% if forms.ACCOUNT.errors %}
           <ul class="errorlist">
@@ -115,9 +116,9 @@
           </ul>
         {% endif %}
         <div style="margin-top:10px;">
-          <button type="submit">Save Account</button>
+          <button type="submit">Guardar Cuenta</button>
           {% if instances.account %}
-            <button type="button" onclick="copyText('{{ instances.account.value }}')">Copy Account</button>
+            <button type="button" onclick="copyText('{{ instances.account.value }}')">Copiar Cuenta</button>
           {% endif %}
         </div>
       </form>
@@ -127,8 +128,8 @@
 
   <script>
     async function copyText(text) {
-      try { await navigator.clipboard.writeText((text || "").trim()); alert("Copied!"); }
-      catch (e) { console.error(e); alert("Failed to copy"); }
+      try { await navigator.clipboard.writeText((text || "").trim()); alert("¡Copiado!"); }
+      catch (e) { console.error(e); alert("Error al copiar"); }
     }
   </script>
 </body>

@@ -4,12 +4,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign in</title>
+  <title>Inicia sesión</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
   <form method="post" novalidate>
-    <h1>Sign in</h1>
+    <h1>Inicia sesión</h1>
     {% csrf_token %}
     {% if form.errors %}
       <ul class="errorlist">
@@ -21,11 +22,11 @@
     {% endif %}
 
     <label>Email<br>{{ form.username }}</label>
-    <label>Password<br>{{ form.password }}</label>
+    <label>Contraseña<br>{{ form.password }}</label>
 
-    <button type="submit">Sign in</button>
+    <button type="submit">Iniciar sesión</button>
     <div class="footer">
-      <a href="{% url 'signup' %}">Create an account</a>
+      <a href="{% url 'signup' %}">¿No tienes cuenta aun? Crea una cuenta</a>
     </div>
   </form>
 </body>
