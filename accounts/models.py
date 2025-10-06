@@ -26,11 +26,14 @@ def validate_public_slug(value: str):
         raise ValidationError("Use lowercase letters, numbers, and hyphens only.")
 
 class UserManager(BaseUserManager):
-    def _create_user(self, email: str, password: str | None, **extra_fields):
-        if not email:
-            raise ValueError('The Email must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+    def _create_user(self, email: str | None = None, phone: str | None = None, password: str | None = None, **extra_fields):
+        if not email and not phone:
+            raise ValueError('Either email or phone must be set')
+        
+        if email:
+            email = self.normalize_email(email)
+        
+        user = self.model(email=email, phone=phone, **extra_fields)
         if password:
             user.set_password(password)
         else:
@@ -38,7 +41,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email: str, password: str | None = None, **extra_fields):
+    def create_superuser(self, email: str | None = None, phone: str | None = None, password: str | None = None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -47,7 +50,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(email=email, phone=phone, password=password, **extra_fields)
 
 def _generate_public_slug(base: str | None = None) -> str:
     # Random slug generator - kewl
@@ -58,8 +61,9 @@ def _generate_public_slug(base: str | None = None) -> str:
     return rand
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    display_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    display_name = models.CharField(max_length=150, blank=True, verbose_name="Nombre de usuario/Negocio") # Assignable name for the template
     public_slug = models.SlugField(
         max_length=32,
         unique=True,
@@ -81,13 +85,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'user'
         verbose_name_plural = 'users'
         ordering = ['-date_joined']
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(email__isnull=False) | models.Q(phone__isnull=False),
+                name='email_or_phone_required'
+            )
+        ]
 
     def __str__(self) -> str: # Useful in admin and shell idk why copilot says that
-        return self.email
+        return self.email or self.phone or f"User {self.pk}"
+    
+    def clean(self):
+        super().clean()
+        if not self.email and not self.phone:
+            raise ValidationError("Debe proporcionar un email o un número de teléfono.")
+        
+        # Validar que solo uno esté presente (opcional, depende de tu lógica)
+        # if self.email and self.phone:
+        #     raise ValidationError("Solo puede tener email o teléfono, no ambos.")
     
     def save(self, *args, **kwargs):
         if not self.public_slug:
-            base = self.display_name or (self.email.split("@")[0] if self.email else None)
+            base = None
+            if self.display_name:
+                base = self.display_name
+            elif self.email:
+                base = self.email.split("@")[0]
+            elif self.phone:
+                base = self.phone
+            
             slug = _generate_public_slug(base)
             # Evita reservados y colisiones
             Model = type(self)

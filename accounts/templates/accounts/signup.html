@@ -1,35 +1,88 @@
+{% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign up</title>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-    form { max-width: 520px; margin: 0 auto; display: grid; gap: 12px; }
-    input, button { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-    button { cursor: pointer; }
-    .errorlist { color: #b91c1c; list-style: none; padding: 0; }
-  </style>
+  <title>Crear cuenta</title>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
   <form method="post" novalidate>
-    <h1>Create account</h1>
+    <h1>Crear cuenta</h1>
+    <p class="subtitle">Regístrate con email o teléfono</p>
+    
     {% csrf_token %}
-    {% if form.errors %}
+    
+    {% if form.non_field_errors %}
       <ul class="errorlist">
-        {% for field, errors in form.errors.items %}
-          {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-        {% endfor %}
         {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
       </ul>
     {% endif %}
 
-    <!-- UserCreationForm ya expone email, display_name, password1, password2 -->
-    {{ form.as_p }}
+    <div class="form-field">
+      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      {{ form.email }}
+      {% if form.email.help_text %}
+        <span class="help-text">{{ form.email.help_text }}</span>
+      {% endif %}
+      {% if form.email.errors %}
+        <ul class="errorlist">
+          {% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
 
-    <button type="submit">Sign up</button>
-    <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+    <div class="or-divider">— O —</div>
+
+    <div class="form-field">
+      <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+      {{ form.phone }}
+      {% if form.phone.help_text %}
+        <span class="help-text">{{ form.phone.help_text }}</span>
+      {% endif %}
+      {% if form.phone.errors %}
+        <ul class="errorlist">
+          {% for e in form.phone.errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.display_name.id_for_label }}">{{ form.display_name.label }}</label>
+      {{ form.display_name }}
+      {% if form.display_name.help_text %}
+        <span class="help-text">{{ form.display_name.help_text }}</span>
+      {% endif %}
+      {% if form.display_name.errors %}
+        <ul class="errorlist">
+          {% for e in form.display_name.errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+        <ul class="errorlist">
+          {% for e in form.password1.errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+        <ul class="errorlist">
+          {% for e in form.password2.errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <button type="submit">Crear cuenta</button>
+    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar sesión</a></p>
   </form>
 </body>
 </html>
