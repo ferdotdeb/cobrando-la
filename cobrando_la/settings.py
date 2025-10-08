@@ -40,7 +40,15 @@ INSTALLED_APPS = [
     'accounts',
     'bank_details',
     'home',
+    'tailwind',
+    'theme',
 ]
+
+if DEBUG:
+    # Add django_browser_reload only in DEBUG mode
+    INSTALLED_APPS += ['django_browser_reload']
+
+TAILWIND_APP_NAME = 'theme'
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -53,6 +61,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    # Add django_browser_reload middleware only in DEBUG mode
+    MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
 
 ROOT_URLCONF = 'cobrando_la.urls'
 
