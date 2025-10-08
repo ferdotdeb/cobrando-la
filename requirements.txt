@@ -7,6 +7,9 @@ Django>=5.2.6
 # WSGI server for production
 gunicorn>=21.2.0
 
+# Static files serving with compression and caching
+whitenoise>=6.6.0
+
 # Environment variables management
 python-decouple>=3.8
 

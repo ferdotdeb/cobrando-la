@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Documentation (opcional, comentar si quieres incluirla)
+README.md
+*.md
+
+# Scripts de desarrollo
+verify-setup.sh
+setup-tailwind.sh
+
+# Archivos de desarrollo
+.env
+.envrc
+
+# Archivos compilados que se generarán en el build
+static/build/

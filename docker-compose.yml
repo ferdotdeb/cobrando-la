@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # En desarrollo, montar código para hot reload
+      - .:/app
+      # Excluir node_modules y venv del host
+      - /app/node_modules
+      - /app/.venv
+    environment:
+      - DEBUG=True
+      - PYTHONUNBUFFERED=1
+    command: python manage.py runserver 0.0.0.0:8000
+    # Para desarrollo con Tailwind hot reload:
+    # command: sh -c "npm run dev:css & python manage.py runserver 0.0.0.0:8000"
+
+  # Servicio de producción
+  web-prod:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-this-in-production}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
+    # Ya usa gunicorn por defecto desde el CMD del Dockerfile
