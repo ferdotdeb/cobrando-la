@@ -1,27 +1,416 @@
+{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>Cobrando-la - Tu sitio de pagos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobrando-la - Tus transferencias, re-inventadas</title>
+    <meta name="description" content="Verifica tus cuentas y tarjetas en segundos con estándares modernos y una experiencia clara.">
+    <style>
+        /* Gradiente de fondo suave */
+        .hero-gradient {
+            background: linear-gradient(135deg, #000000 0%, #1a0a2e 50%, #830AD1 100%);
+        }
+        
+        /* Nav con backdrop blur al hacer scroll */
+        .nav-scrolled {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        
+        /* Animación suave de foco */
+        *:focus-visible {
+            outline: 2px solid #88BA41;
+            outline-offset: 2px;
+        }
+    </style>
+    {% if DEBUG %}
+        <link rel="stylesheet" href="{% static 'build/tailwind.css' %}">
+    {% else %}
+        {% tailwind_css %}
+    {% endif %}
 </head>
-<body>
-    <header>
-        <nav>
-            {% if user.is_authenticated %}
-                <p>Bienvenido, {{ user.display_name|default:user.email }}!</p>
-                <a href="{% url 'dashboard' %}">Ir al Dashboard</a>
-                <a href="{% url 'public_profile' public_slug=user.public_slug %}">Ver perfil público</a>
-            {% else %}
-                <a href="{% url 'login' %}">Iniciar sesión</a>
-                <a href="{% url 'signup' %}">Crear cuenta</a>
-            {% endif %}
+<body class="bg-black text-white antialiased">
+    <!-- Skip to main content para accesibilidad -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#830AD1] focus:text-white focus:rounded-lg">
+        Saltar al contenido principal
+    </a>
+
+    <!-- Header & Navigation -->
+    <header id="top" class="sticky top-0 z-40 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Navegación principal">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <!-- Logo placeholder -->
+                <div class="flex-shrink-0">
+                    <a href="#top" class="block w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#830AD1] to-[#88BA41] rounded-lg" aria-label="Logo Cobrando-la"></a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex lg:items-center lg:gap-8">
+                    <a href="#about" class="text-sm font-medium text-white/80 hover:text-white transition">Acerca de</a>
+                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white transition">
+                        GitHub
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white transition">Dashboard</a>
+                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white transition">Perfil público</a>
+                        <span class="text-sm text-white/60">{{ user.display_name|default:user.email }}</span>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white transition">Iniciar sesión</a>
+                        <a href="{% url 'signup' %}" class="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium bg-[#830AD1] text-white hover:bg-[#6d09b0] focus:bg-[#6d09b0] transition">
+                            Crear cuenta
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile menu button -->
+                <button type="button" id="mobile-menu-button" class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition" aria-controls="primary-nav" aria-expanded="false">
+                    <span class="sr-only">Abrir menú</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="primary-nav" class="hidden lg:hidden pb-4">
+                <div class="flex flex-col gap-3">
+                    <a href="#about" class="text-sm font-medium text-white/80 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Acerca de</a>
+                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">
+                        GitHub
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Dashboard</a>
+                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Perfil público</a>
+                        <div class="text-sm text-white/60 px-3 py-2">{{ user.display_name|default:user.email }}</div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">Iniciar sesión</a>
+                        <a href="{% url 'signup' %}" class="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium bg-[#830AD1] text-white hover:bg-[#6d09b0] transition">
+                            Crear cuenta
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
         </nav>
     </header>
-    
-    <main>
-        <h1>Bienvenido a Cobrando-la</h1>
-        <p>Tu plataforma para recibir pagos fácilmente</p>
-        <!-- Resto del contenido informativo -->
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="relative hero-gradient py-20 sm:py-28 lg:py-36 overflow-hidden">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+                <div class="max-w-4xl mx-auto">
+                    <div class="rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl p-8 sm:p-12 lg:p-16">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-balance mb-6 bg-gradient-to-r from-white via-white to-[#88BA41] bg-clip-text text-transparent">
+                            Tus transferencias, re-inventadas
+                        </h1>
+                        <p class="text-lg sm:text-xl text-white/80 text-balance mb-10 max-w-2xl">
+                            Verifica tus cuentas y tarjetas en segundos con estándares modernos y una experiencia clara.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            {% if not user.is_authenticated %}
+                                <a href="{% url 'signup' %}" class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-base font-medium bg-[#830AD1] text-white hover:bg-[#6d09b0] focus:bg-[#6d09b0] shadow-lg shadow-[#830AD1]/20 transition">
+                                    Comenzar ahora
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'dashboard' %}" class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-base font-medium bg-[#830AD1] text-white hover:bg-[#6d09b0] focus:bg-[#6d09b0] shadow-lg shadow-[#830AD1]/20 transition">
+                                    Ir al Dashboard
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </a>
+                            {% endif %}
+                            <a href="#about" class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-base font-medium border-2 border-[#88BA41] text-[#88BA41] hover:bg-[#88BA41]/10 focus:bg-[#88BA41]/10 transition">
+                                Conocer más
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verificación de datos -->
+        <section id="verificacion" class="py-16 sm:py-20 lg:py-24 bg-black">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-6xl mx-auto">
+                    <div class="text-center mb-12 lg:mb-16">
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-balance">
+                            Verificación inteligente
+                        </h2>
+                        <p class="text-lg text-white/70 max-w-2xl mx-auto text-balance">
+                            cobrando.la comprueba tus cuentas CLABE y tarjetas de débito con precisión y rapidez
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                        <!-- Feature 1: CLABE -->
+                        <article class="rounded-2xl bg-white/5 backdrop-blur border border-white/10 shadow-lg p-6 lg:p-8 hover:bg-white/10 transition">
+                            <div class="w-12 h-12 rounded-xl bg-[#830AD1]/20 flex items-center justify-center mb-5">
+                                <svg class="w-6 h-6 text-[#830AD1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Validación de CLABE</h3>
+                            <p class="text-white/70 text-balance">
+                                Verificación automática de cuentas CLABE con estándares bancarios mexicanos para garantizar transferencias exitosas.
+                            </p>
+                        </article>
+
+                        <!-- Feature 2: Luhn -->
+                        <article class="rounded-2xl bg-white/5 backdrop-blur border border-white/10 shadow-lg p-6 lg:p-8 hover:bg-white/10 transition">
+                            <div class="w-12 h-12 rounded-xl bg-[#88BA41]/20 flex items-center justify-center mb-5">
+                                <svg class="w-6 h-6 text-[#88BA41]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Algoritmo Luhn</h3>
+                            <p class="text-white/70 text-balance">
+                                Validación de tarjetas de débito mediante el algoritmo Luhn, asegurando que los números sean válidos antes de procesarlos.
+                            </p>
+                        </article>
+
+                        <!-- Feature 3: Respuestas -->
+                        <article class="rounded-2xl bg-white/5 backdrop-blur border border-white/10 shadow-lg p-6 lg:p-8 hover:bg-white/10 transition md:col-span-2 lg:col-span-1">
+                            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-5">
+                                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Respuestas inmediatas</h3>
+                            <p class="text-white/70 text-balance">
+                                Obtén resultados al instante sin esperas. Feedback claro para que puedas corregir errores de forma rápida y sencilla.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seguridad -->
+        <section id="seguridad" class="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-black to-[#0a0a0a]">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl p-8 sm:p-12 lg:p-16">
+                        <div class="flex items-start gap-4 sm:gap-6 mb-8">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-[#830AD1]/20 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-[#830AD1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-balance">
+                                    Seguridad en cada paso
+                                </h2>
+                                <p class="text-lg text-white/70 mb-8 text-balance">
+                                    Almacenamos y procesamos tus datos con el máximo nivel de protección siguiendo las mejores prácticas de la industria.
+                                </p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-[#88BA41] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-white/80"><strong class="text-white">Cifrado end-to-end:</strong> Tus datos están encriptados en reposo y en tránsito con protocolos modernos.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-[#88BA41] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-white/80"><strong class="text-white">Control de acceso:</strong> Autenticación robusta y permisos granulares para proteger tu información.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-[#88BA41] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-white/80"><strong class="text-white">Buenas prácticas:</strong> Auditorías regulares y cumplimiento de estándares internacionales de seguridad.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proyecto Open Source -->
+        <section id="about" class="py-16 sm:py-20 lg:py-24 bg-[#0a0a0a]">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto text-center">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#88BA41]/10 border border-[#88BA41]/20 text-[#88BA41] text-sm font-medium mb-6">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                        Open Source
+                    </div>
+                    
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-balance">
+                        Código abierto.<br>Transparente por diseño.
+                    </h2>
+                    <p class="text-lg text-white/70 mb-8 text-balance">
+                        Creemos en la transparencia total. Por eso, cobrando.la es un proyecto 100% open source bajo licencia GPL 3.0. Revisa el código, contribuye y aprende cómo funciona cada funcionalidad.
+                    </p>
+                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-base font-medium bg-white/5 backdrop-blur border border-white/10 text-white hover:bg-white/10 focus:bg-white/10 transition">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                        Ver repositorio en GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="py-16 sm:py-20 lg:py-24 bg-black">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-center text-balance">
+                        Preguntas frecuentes
+                    </h2>
+                    <p class="text-lg text-white/70 text-center mb-12 text-balance">
+                        Todo lo que necesitas saber sobre cobrando.la
+                    </p>
+
+                    <div class="space-y-4">
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Tiene algún costo usar cobrando.la?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                No. cobrando.la es completamente gratuito y de código abierto. Puedes usarlo sin restricciones bajo la licencia GPL 3.0.
+                            </div>
+                        </details>
+
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Cómo protegen mi información personal?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                Utilizamos cifrado de extremo a extremo, controles de acceso estrictos y seguimos las mejores prácticas de seguridad. Tus datos nunca se comparten con terceros.
+                            </div>
+                        </details>
+
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Qué tan rápida es la verificación?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                La validación de CLABE y tarjetas es instantánea. Recibes feedback en tiempo real para que puedas corregir cualquier error al momento.
+                            </div>
+                        </details>
+
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Puedo integrar cobrando.la en mi proyecto?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                Sí. Al ser open source, puedes estudiar el código, adaptarlo a tus necesidades y contribuir mejoras a la comunidad bajo GPL 3.0.
+                            </div>
+                        </details>
+
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Ofrecen soporte técnico?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                Puedes abrir un issue en GitHub para reportar problemas o sugerir mejoras. La comunidad y los mantenedores del proyecto estarán encantados de ayudarte.
+                            </div>
+                        </details>
+
+                        <details class="group rounded-2xl bg-white/5 backdrop-blur border border-white/10 overflow-hidden hover:bg-white/10 transition">
+                            <summary class="cursor-pointer px-6 py-5 font-medium text-lg flex items-center justify-between list-none">
+                                <span>¿Qué tecnologías usa cobrando.la?</span>
+                                <svg class="w-5 h-5 text-white/60 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="px-6 pb-5 text-white/70">
+                                Está construido con Django, Python, y Tailwind CSS. Puedes revisar todo el stack tecnológico en el repositorio de GitHub.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-black border-t border-white/10 py-8 sm:py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-6 text-sm">
+                    <a href="#" class="text-white/60 hover:text-white transition">Términos y Condiciones</a>
+                    <span class="text-white/20 hidden sm:inline">•</span>
+                    <a href="#" class="text-white/60 hover:text-white transition">Contacto</a>
+                    <span class="text-white/20 hidden sm:inline">•</span>
+                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-white/60 hover:text-white transition">GitHub</a>
+                </div>
+                <div class="text-sm text-white/60 text-center sm:text-right">
+                    © 2025 cobrando.la • GPL 3.0
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('primary-nav');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Navbar scroll effect
+        const header = document.querySelector('header');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) {
+                header.classList.add('nav-scrolled');
+            } else {
+                header.classList.remove('nav-scrolled');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Close mobile menu on navigation
+        document.querySelectorAll('#primary-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
