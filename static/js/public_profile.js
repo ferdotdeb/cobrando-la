@@ -3,19 +3,21 @@
  * Handles QR code generation, clipboard operations, and UI interactions
  */
 
-// Toast system
+// Toast system con Tailwind
 function showToast(message, isError = false) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.className = 'toast' + (isError ? ' error' : '');
   
-  // Force reflow
-  void toast.offsetWidth;
+  // Aplicar clases según tipo
+  if (isError) {
+    toast.className = 'fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-red-500/90 text-white font-medium shadow-lg transform transition-all duration-300 opacity-100 translate-y-0';
+  } else {
+    toast.className = 'fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg transform transition-all duration-300 opacity-100 translate-y-0';
+  }
   
-  toast.classList.add('show');
-  
+  // Ocultar después de 2.5s
   setTimeout(() => {
-    toast.classList.remove('show');
+    toast.className = 'fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg transform transition-all duration-300 opacity-0 translate-y-2 pointer-events-none';
   }, 2500);
 }
 
@@ -29,7 +31,7 @@ async function copyText(text) {
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
-      showToast('¡Copiado!');
+      showToast('¡Copiado al portapapeles!');
     } else {
       // Fallback for older browsers
       const textarea = document.createElement('textarea');
@@ -42,7 +44,7 @@ async function copyText(text) {
       document.body.removeChild(textarea);
       
       if (success) {
-        showToast('¡Copiado!');
+        showToast('¡Copiado al portapapeles!');
       } else {
         showToast('Error al copiar', true);
       }
@@ -57,7 +59,7 @@ async function copyPublicLink() {
   const publicUrl = window.PUBLIC_URL;
   await copyText(publicUrl);
   if (publicUrl) {
-    showToast('Enlace copiado');
+    showToast('Enlace público copiado');
   }
 }
 
@@ -78,7 +80,7 @@ function generateQR(text) {
   try {
     // Check if QRCode is available
     if (typeof QRCode === 'undefined') {
-      container.innerHTML = '<p style="color: #dc2626; padding: 20px;">La librería QR no se cargó correctamente</p>';
+      container.innerHTML = '<p class="text-red-400 p-5">La librería QR no se cargó correctamente</p>';
       return;
     }
 
@@ -92,19 +94,33 @@ function generateQR(text) {
     });
   } catch (error) {
     console.error('Error generating QR:', error);
-    container.innerHTML = '<p style="color: #dc2626; padding: 20px;">Error al generar el código QR</p>';
+    container.innerHTML = '<p class="text-red-400 p-5">Error al generar el código QR</p>';
   }
 }
 
-// Toggle QR modal
+// Toggle QR modal con Tailwind
 function toggleQR() {
   const modal = document.getElementById('qr-modal');
-  const isShowing = modal.classList.contains('show');
+  const content = modal.querySelector('.relative');
+  
+  // Check si está visible
+  const isShowing = !modal.classList.contains('pointer-events-none');
   
   if (isShowing) {
-    modal.classList.remove('show');
+    // Ocultar con animación
+    modal.classList.add('opacity-0');
+    content.classList.add('scale-95');
+    setTimeout(() => {
+      modal.classList.add('pointer-events-none');
+    }, 300);
   } else {
-    modal.classList.add('show');
+    // Mostrar con animación
+    modal.classList.remove('pointer-events-none');
+    setTimeout(() => {
+      modal.classList.remove('opacity-0');
+      content.classList.remove('scale-95');
+    }, 10);
+    
     // Generate QR on first open or regenerate if needed
     if (!qrCodeInstance) {
       generateQR(window.PUBLIC_URL);
@@ -123,7 +139,7 @@ function closeQRIfBackdrop(event) {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const modal = document.getElementById('qr-modal');
-    if (modal.classList.contains('show')) {
+    if (!modal.classList.contains('pointer-events-none')) {
       toggleQR();
     }
   }

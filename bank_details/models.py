@@ -73,7 +73,7 @@ class BankDetails(models.Model):
     
     class Brand(models.TextChoices):
         VISA = "Visa", "Visa"
-        MASTERCARD = "Mastercard", "Mastercard"
+        MASTERCARD = "MasterCard", "MasterCard"
         OTHER = "Other", "Other"
 
     class BankNameSource(models.TextChoices):
