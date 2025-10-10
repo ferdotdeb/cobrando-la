@@ -132,9 +132,9 @@ class BankDetails(models.Model):
 
         if self.kind == self.Kind.CLABE:
             if not re.fullmatch(r"\d{18}", val):
-                raise ValidationError({"value": "La CLABE debe tener exactamente 18 dígitos."})
+                raise ValidationError({"value": "La CLABE Interbancaria debe tener exactamente 18 dígitos."})
             if not clabe_checksum_ok(val):
-                raise ValidationError({"value": "La suma de verificación de la CLABE es inválida."})
+                raise ValidationError({"value": "La CLABE Interbancaria no es válida."})
 
             self.bank_code = val[:3]
             # Autocompleta bank_name si está vacío o si está en modo AUTO

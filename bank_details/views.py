@@ -50,7 +50,7 @@ def dashboard(request):
         if form.is_valid():
             try:
                 form.save(owner=request.user, kind=form_kind)
-                messages.success(request, f"{form_kind.title()} guardado.")
+                messages.success(request, "Tarjeta guardada.")
                 return redirect("dashboard")  # PRG: evita re-envíos
             except Exception as e:
                 messages.error(request, f"Error al guardar: {e}")
