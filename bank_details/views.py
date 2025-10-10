@@ -31,7 +31,7 @@ def dashboard(request):
     if request.method == "POST":
         form_kind = request.POST.get("form_kind")
         if form_kind not in {Kind.CLABE, Kind.CARD, Kind.ACCOUNT}:
-            messages.error(request, "Invalid form kind.")
+            messages.error(request, "Tipo de formulario inválido.")
             return redirect("dashboard")
 
         # Escoge la instancia según el kind:
@@ -50,12 +50,12 @@ def dashboard(request):
         if form.is_valid():
             try:
                 form.save(owner=request.user, kind=form_kind)
-                messages.success(request, f"{form_kind.title()} saved.")
+                messages.success(request, f"{form_kind.title()} guardado.")
                 return redirect("dashboard")  # PRG: evita re-envíos
             except Exception as e:
-                messages.error(request, f"Error: {e}")
+                messages.error(request, f"Error al guardar: {e}")
         else:
-            messages.error(request, "Please fix the errors below.")
+            messages.error(request, "Por favor, corrija los errores a continuación.")
         # Si hay errores, volvemos a construir los otros forms "en limpio"
         other_forms = {
             Kind.CLABE: BankDetailsForm(instance=clabe_inst, initial={'kind': Kind.CLABE}),
