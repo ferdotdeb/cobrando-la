@@ -1,0 +1,30 @@
+name: ${DOCKER_DEV_NAME}
+
+services:
+  db:
+    image: postgres:18
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DOCKER_DEV_POSTGRES_DB}
+      - POSTGRES_USER=${DOCKER_DEV_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${DOCKER_DEV_POSTGRES_PASSWORD}
+      - TZ=America/Mexico_City
+    ports:
+      - "${DOCKER_DEV_DB_PORT}:5432"
+
+  django:
+    build: 
+      context: ../../
+      dockerfile: docker/dev/Dockerfile
+    command: sh -c "python manage.py migrate && python manage.py tailwind dev"
+    volumes:
+      - ../../:/app
+    ports:
+      - "${DOCKER_DEV_PORT}:8000"
+      
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
