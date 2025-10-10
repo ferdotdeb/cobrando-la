@@ -14,9 +14,11 @@ services:
       - "${DOCKER_DEV_DB_PORT}:5432"
 
   django:
-    build: 
+    build:
       context: ../../
       dockerfile: docker/dev/Dockerfile
+    env_file:
+      - ../../.env
     command: sh -c "python manage.py migrate && python manage.py tailwind dev"
     volumes:
       - ../../:/app
