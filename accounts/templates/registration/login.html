@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Inicia sesión en Cobrando.la - Accede a tu cuenta de forma segura">
-    <title>Iniciar sesión - Cobrando.la</title>
+    <title>¡Hola de nuevo!</title>
     {% tailwind_css %}
     <style>
         /* Respeta preferencias de movimiento reducido */
@@ -62,7 +62,6 @@
                             {% for field, errors in form.errors.items %}
                                 {% for e in errors %}<li>{{ e }}</li>{% endfor %}
                             {% endfor %}
-                            {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -128,7 +127,7 @@
             <div class="text-center">
                 <a href="{% url 'signup' %}" 
                    class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                    Crear una cuenta nueva
+                    ¡Crea tu cuenta!
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>

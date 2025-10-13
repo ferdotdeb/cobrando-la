@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Datos de pago públicos de {{ owner.display_name|default:owner.email }}">
-    <title>{{ owner.display_name|default:owner.email }} — Datos de pago</title>
+    <title>Datos de pago de {{ owner.display_name|default:owner.email }}</title>
     {% tailwind_css %}
     <style>
         /* Respeta preferencias de movimiento reducido */
@@ -22,7 +22,7 @@
         }
         /* Estilos para SVG de las marcas */
         .brand-svg {
-            width: 120px;
+            width: 150px;
             height: auto;
             background-color: #fff;
         }
@@ -61,7 +61,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        Dashboard
+                        Volver al panel de configuración
                     </a>
                     <button 
                         onclick="copyPublicLink()"
@@ -79,7 +79,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
                         </svg>
-                        <span class="hidden sm:inline">QR</span>
+                        <span class="hidden sm:inline">Codigo QR</span>
                     </button>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 Datos de pago de <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>
             </h1>
             <p class="text-lg text-white/60">
-                Información pública para recibir transferencias
+                Datos necesarios para recibir transferencias
             </p>
         </div>
 
@@ -117,7 +117,7 @@
                                             <h2 class="text-xl sm:text-2xl font-semibold text-[#88BA41]">CLABE Interbancaria</h2>
                                             {% if d.bank_code %}
                                                 <span class="inline-block mt-1 px-3 py-1 rounded-full bg-[#88BA41]/20 text-[#88BA41] text-xs font-semibold">
-                                                    Código: {{ d.bank_code }}
+                                                    Código Bancario: {{ d.bank_code }}
                                                 </span>
                                             {% endif %}
                                         </div>

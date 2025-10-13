@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard - Administra tus datos bancarios en Cobrando.la">
-    <title>Dashboard - Cobrando.la</title>
+    <title>Modifica tus datos</title>
     {% tailwind_css %}
     <style>
         /* Respeta preferencias de movimiento reducido */
@@ -72,7 +72,7 @@
         <!-- Welcome header -->
         <div class="mb-8 sm:mb-12">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-2">
-                ¡Hola de nuevo, <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>!
+                ¡Hola de nuevo <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>!
             </h1>
             <p class="text-lg text-white/60">
                 Administra tus datos bancarios y controla su visibilidad
@@ -115,13 +115,13 @@
                 <div class="flex items-start justify-between mb-6">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
-                            <h2 class="text-2xl sm:text-3xl font-semibold">CLABE</h2>
+                            <h2 class="text-2xl sm:text-3xl font-semibold">CLABE Interbancaria</h2>
                             {% if instances.clabe %}
                                 <span class="px-3 py-1 rounded-full bg-[#88BA41]/20 text-[#88BA41] text-xs font-semibold">Guardado</span>
                             {% endif %}
                         </div>
                         <p class="text-sm text-white/60 max-w-2xl">
-                            18 dígitos con verificación. El nombre del banco se sugiere automáticamente, pero puedes editarlo.
+                            18 dígitos con verificación. El nombre del banco se sugiere automáticamente al detectar tu CLABE Interbancaria, pero puedes editarlo.
                         </p>
                     </div>
                     <div class="text-4xl">🏦</div>
@@ -235,7 +235,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Guardar CLABE
+                            Guardar CLABE interbancaria
                         </button>
                         {% if instances.clabe %}
                             <button 
@@ -245,7 +245,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                Copiar CLABE
+                                Copiar CLABE interbancaria
                             </button>
                         {% endif %}
                     </div>
@@ -259,13 +259,13 @@
                 <div class="flex items-start justify-between mb-6">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
-                            <h2 class="text-2xl sm:text-3xl font-semibold">Tarjeta</h2>
+                            <h2 class="text-2xl sm:text-3xl font-semibold">Tarjeta de débito</h2>
                             {% if instances.card %}
                                 <span class="px-3 py-1 rounded-full bg-[#830AD1]/20 text-[#830AD1] text-xs font-semibold">Guardado</span>
                             {% endif %}
                         </div>
                         <p class="text-sm text-white/60 max-w-2xl">
-                            16 dígitos, Visa o MasterCard. Validado con algoritmo Luhn. El nombre del banco lo ingresas manualmente.
+                            16 dígitos, Visa o MasterCard. Validado con algoritmo Luhn. El nombre del banco debes ingresarlo manualmente.
                         </p>
                     </div>
                     <div class="text-4xl">💳</div>
@@ -281,7 +281,7 @@
                         <!-- Número de tarjeta -->
                         <div>
                             <label for="{{ forms.CARD.value.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
-                                Número de tarjeta
+                                16 dígitos de la tarjeta
                             </label>
                             <input 
                                 type="text" 
@@ -378,7 +378,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Guardar Tarjeta
+                            Guardar digitos de la tarjeta
                         </button>
                         {% if instances.card %}
                             <button 
@@ -388,7 +388,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                Copiar Tarjeta
+                                Copiar digitos de la tarjeta
                             </button>
                         {% endif %}
                     </div>
@@ -506,7 +506,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Guardar Cuenta
+                            Guardar cuenta bancaria 
                         </button>
                         {% if instances.account %}
                             <button 
@@ -516,7 +516,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                Copiar Cuenta
+                                Copiar cuenta bancaria 
                             </button>
                         {% endif %}
                     </div>

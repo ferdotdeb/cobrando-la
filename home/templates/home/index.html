@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cobrando.la - Tus transferencias, re-inventadas. Plataforma segura para compartir datos bancarios con verificación CLABE y validación de tarjetas.">
-    <title>Cobrando.la - Tus transferencias, re-inventadas</title>
+    <meta name="description" content="Cobrando.la - Tus transferencias, más accesibles. Plataforma segura para compartir datos bancarios con verificación CLABE y validación de tarjetas.">
+    <title>Tus transferencias, más accesibles</title>
     {% tailwind_css %}
     <style>
         /* Respeta preferencias de movimiento reducido */
@@ -37,7 +37,7 @@
                 <div class="hidden md:flex items-center gap-8">
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Dashboard
+                            Panel de configuración
                         </a>
                         <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Perfil público
@@ -77,7 +77,7 @@
                 <div class="flex flex-col gap-3">
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Dashboard
+                            Panel de configuración
                         </a>
                         <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
                             Perfil público
@@ -124,24 +124,24 @@
                         
                         <!-- Título principal 2 -->
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-semibold tracking-tight bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent mb-6">
-                            Tus transferencias, re-inventadas
+                            Tus transferencias, más accesibles
                         </h2>
                         
                         <!-- Subcopy -->
                         <p class="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-8">
-                            Comparte tus datos bancarios de forma segura y elegante. Verificación CLABE, validación de tarjetas y protección por defecto.
+                            Comparte tus datos bancarios de forma segura y accesible. Verificación de cuenta CLABE, validación de tarjeta de débito y protección de tus datos.
                         </p>
                         
                         <!-- CTA primario -->
                         {% if user.is_authenticated %}
                             <a href="{% url 'dashboard' %}" 
                                class="inline-block rounded-xl px-6 py-3 sm:px-8 sm:py-4 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
-                                Ir al Dashboard
+                                Ir al panel de configuración
                             </a>
                         {% else %}
                             <a href="{% url 'signup' %}" 
                                class="inline-block rounded-xl px-6 py-3 sm:px-8 sm:py-4 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
-                                Comenzar
+                                ¡Regístrate gratis!
                             </a>
                         {% endif %}
                     </div>
@@ -175,7 +175,7 @@
                         <div class="text-4xl mb-4">🏦</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Verificación CLABE</h3>
                         <p class="text-white/70 leading-relaxed">
-                            Nuestro sistema valida que tu CLABE tenga el formato correcto y corresponda a un banco mexicano registrado.
+                            Nuestro sistema valida que tu cuenta CLABE tenga el formato correcto y corresponda a un banco mexicano registrado.
                         </p>
                     </div>
 
@@ -184,7 +184,7 @@
                         <div class="text-4xl mb-4">💳</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Validación de tarjetas</h3>
                         <p class="text-white/70 leading-relaxed">
-                            Algoritmo Luhn integrado para verificar Visa y MasterCard. Sin almacenar datos sensibles completos.
+                        Algoritmo de Luhn integrado para verificar tarjetas de débito Visa y MasterCard. Sin almacenar datos sensibles completos (CVV y fecha de vencimiento).
                         </p>
                     </div>
 
@@ -303,7 +303,7 @@
                             Código abierto, confianza transparente
                         </h2>
                         <p class="text-lg text-white/70 mb-8">
-                            Cobrando.la es un proyecto de código abierto. Puedes revisar, auditar y contribuir al código en GitHub.
+                            Cobrando.la es de código abierto. Puedes revisar, auditar y contribuir al código en GitHub.
                         </p>
                         <a href="https://github.com/ferdotdeb/cobrando-la" 
                            target="_blank" 
@@ -351,7 +351,7 @@
 
                         <div class="rounded-xl border border-[#830AD1]/20 bg-gradient-to-br from-[#830AD1]/5 to-transparent p-6 hover:bg-[#830AD1]/10 hover:border-[#830AD1]/40 transition duration-300">
                             <div class="text-3xl mb-3">⚖️</div>
-                            <h3 class="text-lg font-semibold mb-2">Libertad GPL 3.0</h3>
+                            <h3 class="text-lg font-semibold mb-2">Licencia GPL 3.0</h3>
                             <p class="text-sm text-white/70">Usa, modifica y distribuye bajo licencia libre.</p>
                         </div>
 
@@ -416,7 +416,7 @@
                             </button>
                             <div id="faq-2" class="faq-content hidden" role="region">
                                 <div class="px-6 pb-5 text-white/70 leading-relaxed">
-                                    <p>Tus datos se almacenan encriptados en nuestra base de datos. Cada cuenta tiene un slug público único e imposible de adivinar. Además, tú controlas qué información es visible: puedes ocultar cualquier dato bancario en cualquier momento desde tu Dashboard. Las contraseñas se almacenan con hash seguro y nunca en texto plano.</p>
+                                    <p>Tus datos se almacenan encriptados en nuestra base de datos. Cada cuenta tiene un slug público único e imposible de adivinar. Además, tú controlas qué información es visible: puedes ocultar cualquier dato bancario en cualquier momento desde tu panel de control. Las contraseñas se almacenan con hash seguro y nunca en texto plano.</p>
                                 </div>
                             </div>
                         </div>
@@ -434,7 +434,7 @@
                             </button>
                             <div id="faq-3" class="faq-content hidden" role="region">
                                 <div class="px-6 pb-5 text-white/70 leading-relaxed">
-                                    <p>Soportamos todos los bancos mexicanos que emiten CLABE. Para tarjetas, validamos Visa y MasterCard usando el algoritmo Luhn. La validación es estructural (formato correcto), no verificamos fondos ni conectamos con emisores de tarjetas.</p>
+                                    <p>Soportamos todos los bancos mexicanos que emiten CLABE. Para tarjetas, validamos el emisor Visa y MasterCard usando el algoritmo de Luhn. La validación es estructural (formato correcto), no verificamos fondos ni conectamos con emisores de tarjetas.</p>
                                 </div>
                             </div>
                         </div>
@@ -470,7 +470,7 @@
                             </button>
                             <div id="faq-5" class="faq-content hidden" role="region">
                                 <div class="px-6 pb-5 text-white/70 leading-relaxed">
-                                    <p>¡Absolutamente! En tu Dashboard tienes control total sobre la visibilidad de cada dato bancario. Con un simple clic puedes ocultar o mostrar cualquier información. Los cambios se reflejan inmediatamente en tu perfil público. Tú decides qué comparte y cuándo.</p>
+                                    <p>¡Absolutamente! En tu panel de control, puedes gestionar la visibilidad de cada dato bancario. Con un simple clic puedes ocultar o mostrar cualquier información. Los cambios se reflejan inmediatamente en tu perfil público. Tú decides qué comparte y cuándo.</p>
                                 </div>
                             </div>
                         </div>
