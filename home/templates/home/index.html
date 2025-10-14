@@ -36,24 +36,24 @@
                 <!-- Desktop menu -->
                 <div class="hidden md:flex items-center gap-8">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Panel de configuración
                         </a>
-                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Perfil público
                         </a>
                     {% else %}
-                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Iniciar sesión
                         </a>
-                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Crear cuenta
                         </a>
                     {% endif %}
-                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                    <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                         GitHub
                     </a>
-                    <a href="{% url 'about' %}" class="text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                    <a href="{% url 'about' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                         Acerca de
                     </a>
                 </div>
