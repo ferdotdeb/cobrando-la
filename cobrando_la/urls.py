@@ -8,11 +8,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", index, name="home"),  # Landing Page
-    path("about/", about, name="about"),  # About Page
-    path("contact/", contact, name="contact"),  # Contact Page
-    path("dashboard/", include("bank_details.urls")),  # Dashboard
-    path("terms/", terms, name="terms"),  # Terms and Conditions Page
-    path("u/<slug:public_slug>/", public_profile, name="public_profile"),
+    path("about/", about, name="about"),
+    path("contact/", contact, name="contact"),
+    path("dashboard/", include("bank_details.urls")),
+    path("terms/", terms, name="terms"),
+    path("u/<slug:public_slug>/", public_profile, name="public_profile"), # Public profile configured with slug 
 ]
 
 if settings.DEBUG:
