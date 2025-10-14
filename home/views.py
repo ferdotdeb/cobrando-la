@@ -5,3 +5,7 @@ def index(request):
     return render(request, 'home/index.html', {
         'user': request.user
     })
+
+
+def about(request):
+    return render(request, 'home/about.html')
