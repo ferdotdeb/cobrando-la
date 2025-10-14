@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from bank_details.views import public_profile
-from home.views import index, about, contact
+from home.views import index, about, contact, terms
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -11,6 +11,7 @@ urlpatterns = [
     path("about/", about, name="about"),  # About Page
     path("contact/", contact, name="contact"),  # Contact Page
     path("dashboard/", include("bank_details.urls")),  # Dashboard
+    path("terms/", terms, name="terms"),  # Terms and Conditions Page
     path("u/<slug:public_slug>/", public_profile, name="public_profile"),
 ]
 
