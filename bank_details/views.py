@@ -23,7 +23,7 @@ def dashboard(request):
 
     kind_labels = {
         Kind.CLABE: "CLABE interbancaria",
-        Kind.CARD: "Tarjeta de debito",
+        Kind.CARD: "Tarjeta de débito",
         Kind.ACCOUNT: "Cuenta bancaria",
     }
 
