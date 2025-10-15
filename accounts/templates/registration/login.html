@@ -1,38 +1,154 @@
-<!doctype html>
-<html lang="en">
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign in</title>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-    form { max-width: 420px; margin: 0 auto; display: grid; gap: 12px; }
-    input, button { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-    button { cursor: pointer; }
-    .errorlist { color: #b91c1c; list-style: none; padding: 0; }
-    .footer { text-align: center; margin-top: 12px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inicia sesión en Cobrando.la - Accede a tu cuenta de forma segura">
+    <title>¡Hola de nuevo!</title>
+    {% tailwind_css %}
+    <style>
+        /* Respeta preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
-<body>
-  <form method="post" novalidate>
-    <h1>Sign in</h1>
-    {% csrf_token %}
-    {% if form.errors %}
-      <ul class="errorlist">
-        {% for field, errors in form.errors.items %}
-          {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-        {% endfor %}
-        {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
-      </ul>
-    {% endif %}
+<body class="bg-black text-white antialiased overflow-x-hidden min-h-screen flex items-center justify-center">
 
-    <label>Email<br>{{ form.username }}</label>
-    <label>Password<br>{{ form.password }}</label>
-
-    <button type="submit">Sign in</button>
-    <div class="footer">
-      <a href="{% url 'signup' %}">Create an account</a>
+    <!-- Gradientes de fondo animados -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#830AD1]/30 via-black to-[#88BA41]/20"></div>
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-[#830AD1]/25 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-[#88BA41]/20 rounded-full blur-3xl"></div>
     </div>
-  </form>
+
+    <!-- Contenedor principal -->
+    <div class="relative w-full max-w-md px-4 sm:px-6 py-8">
+        
+        <!-- Logo/Header -->
+        <div class="text-center mb-8">
+            <a href="{% url 'home' %}" class="inline-flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg mb-6">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-xl transition group-hover:scale-105">
+                    C
+                </div>
+                <span class="text-2xl font-semibold">Cobrando.la</span>
+            </a>
+        </div>
+
+        <!-- Card de login con glassmorphism -->
+        <div class="rounded-2xl border border-[#830AD1]/30 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/10 p-8 sm:p-10">
+            
+            <!-- Título -->
+            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight mb-2 text-center">
+                Inicia sesión
+            </h1>
+            <p class="text-white/60 text-center mb-8">
+                Accede a tu cuenta de Cobrando.la
+            </p>
+
+            <!-- Mensajes de error -->
+            {% if form.errors %}
+                <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 mb-6">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <ul class="space-y-1 text-sm text-red-200">
+                            {% for field, errors in form.errors.items %}
+                                {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Formulario -->
+            <form method="post" novalidate class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Campo Email -->
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                        Email
+                    </label>
+                    <input 
+                        type="text" 
+                        name="{{ form.username.name }}" 
+                        id="{{ form.username.id_for_label }}"
+                        value="{{ form.username.value|default:'' }}"
+                        required
+                        autocomplete="username"
+                        inputmode="email"
+                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                        placeholder="Email o teléfono"
+                    />
+                </div>
+
+                <!-- Campo Contraseña -->
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                        Contraseña
+                    </label>
+                    <input 
+                        type="password" 
+                        name="{{ form.password.name }}" 
+                        id="{{ form.password.id_for_label }}"
+                        required
+                        autocomplete="current-password"
+                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                        placeholder="••••••••"
+                    />
+                </div>
+
+                <!-- Botón de submit -->
+                <button 
+                    type="submit"
+                    class="w-full rounded-xl px-6 py-3.5 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
+                    Iniciar sesión
+                </button>
+
+            </form>
+
+            <!-- Divisor -->
+            <div class="relative my-8">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-white/10"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-4 bg-black/50 text-white/60">¿No tienes cuenta?</span>
+                </div>
+            </div>
+
+            <!-- Link a registro -->
+            <div class="text-center">
+                <a href="{% url 'signup' %}" 
+                   class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                    ¡Crea tu cuenta!
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Link de regreso -->
+        <div class="text-center mt-6">
+            <a href="{% url 'home' %}" 
+               class="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver al inicio
+            </a>
+        </div>
+
+    </div>
+
 </body>
 </html>

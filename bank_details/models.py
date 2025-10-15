@@ -43,14 +43,14 @@ def detect_card_brand(number: str) -> str:
       - Si no coincide: OTHER
     """
     if len(number) != 16:
-        return "OTHER"
+        return "Other"
     if number.startswith("4"):
-        return "VISA"
+        return "Visa"
     two = int(number[:2])
     four = int(number[:4])
     if 51 <= two <= 55 or 2221 <= four <= 2720:
-        return "MASTERCARD"
-    return "OTHER"
+        return "MasterCard"
+    return "Other"
 
 
 # Mapeo mínimo (extiende cuando quieras)
@@ -60,6 +60,8 @@ BANK_CODE_MAP = {
     "014": "Santander",
     "021": "HSBC",
     "072": "Banorte",
+    "638": "Nu Bank",
+    "722": "Mercado Pago"
     # TODO: añade más códigos si lo deseas
 }
 
@@ -70,9 +72,9 @@ class BankDetails(models.Model):
         ACCOUNT = "ACCOUNT", "Account"
     
     class Brand(models.TextChoices):
-        VISA = "VISA", "VISA"
-        MASTERCARD = "MASTERCARD", "MasterCard"
-        OTHER = "OTHER", "Other"
+        VISA = "Visa", "Visa"
+        MASTERCARD = "MasterCard", "MasterCard"
+        OTHER = "Other", "Other"
 
     class BankNameSource(models.TextChoices):
         AUTO = "AUTO", "Auto-detected"
@@ -130,9 +132,9 @@ class BankDetails(models.Model):
 
         if self.kind == self.Kind.CLABE:
             if not re.fullmatch(r"\d{18}", val):
-                raise ValidationError({"value": "CLABE must be exactly 18 digits."})
+                raise ValidationError({"value": "La CLABE Interbancaria debe tener exactamente 18 dígitos."})
             if not clabe_checksum_ok(val):
-                raise ValidationError({"value": "CLABE checksum is invalid."})
+                raise ValidationError({"value": "La CLABE Interbancaria no es válida."})
 
             self.bank_code = val[:3]
             # Autocompleta bank_name si está vacío o si está en modo AUTO
@@ -148,22 +150,22 @@ class BankDetails(models.Model):
 
         elif self.kind == self.Kind.CARD:
             if not re.fullmatch(r"\d{16}", val):
-                raise ValidationError({"value": "Card number must be exactly 16 digits."})
+                raise ValidationError({"value": "El número de tarjeta debe tener exactamente 16 dígitos."})
             if not luhn_check(val):
-                raise ValidationError({"value": "Card number failed Luhn checksum."})
+                raise ValidationError({"value": "El número de tarjeta falló la verificación Luhn."})
             self.brand = detect_card_brand(val)
             # bank_code no aplica a tarjetas; limpia por si acaso
             self.bank_code = ""
 
         elif self.kind == self.Kind.ACCOUNT:
             if not re.fullmatch(r"\d{6,20}", val):
-                raise ValidationError({"value": "Account number must be 6–20 digits."})
+                raise ValidationError({"value": "El número de cuenta debe tener entre 6 y 20 dígitos."})
             # No hay autocompletado; respeta bank_name manual si existe
             self.bank_code = ""
             self.brand = ""
 
         else:
-            raise ValidationError({"kind": "Unsupported kind."})
+            raise ValidationError({"kind": "Tipo no soportado."})
 
     def save(self, *args, **kwargs):
         # Garantiza que clean() se ejecute al guardar (incluye normalización)

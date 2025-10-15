@@ -7,9 +7,9 @@ class BankDetailsForm(forms.ModelForm):
         fields = ["kind", "value", "bank_name", "alias", "is_public"]
         widgets = {
             "kind": forms.HiddenInput(),
-            "value": forms.TextInput(attrs={"placeholder": "Digits only"}),
-            "bank_name": forms.TextInput(attrs={"placeholder": "Optional bank name"}),
-            "alias": forms.TextInput(attrs={"placeholder": "Optional label"}),
+            "value": forms.TextInput(attrs={"placeholder": "Escribe numeros unicamente"}),
+            "bank_name": forms.TextInput(attrs={"placeholder": "Nombre del banco (opcional)"}),
+            "alias": forms.TextInput(attrs={"placeholder": "Alias (opcional)"}),
         }
 
     def save(self, owner, kind, commit=True):

@@ -1,148 +1,339 @@
 {% load tz %}
 {% load static %}
 {% load inline_svg from inline_svg %}
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="robots" content="noindex, noarchive" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ owner.display_name|default:owner.email }} — Datos de pago</title>
-    <link rel="stylesheet" href="{% static 'css/public_profile.css' %}">
-  </head>
-  <body>
-    <div class="wrap">
-      <div class="header">
-        <h1>Datos de pago de {{ owner.display_name|default:owner.email }}</h1>
-        <div class="share-section">
-          <button class="btn btn-primary" onclick="copyPublicLink()" aria-label="Compartir enlace público">
-            📋 Compartir enlace
-          </button>
-          <button class="btn" onclick="toggleQR()" aria-label="Mostrar código QR">
-            📱 Mostrar QR
-          </button>
-        </div>
-      </div>
-
-      {% if details %}
-        {# CLABE Section #}
-        {% with clabe_items=details|dictsort:"kind"|slice:":99" %}
-          {% for d in clabe_items %}
-            {% if d.kind == 'CLABE' %}
-              {% if forloop.first %}
-              {% endif %}
-              <div class="card">
-                <div class="card-header">
-                  <span class="kind-label">CLABE Interbancaria</span>
-                  {% if d.bank_code %}
-                    <span class="badge badge-code">{{ d.bank_code }}</span>
-                  {% endif %}
-                </div>
-                {% if d.bank_name or d.alias %}
-                  <div class="meta">
-                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
-                  </div>
-                {% endif %}
-                <div class="value-container">
-                  <div class="value" id="val-clabe-{{ forloop.counter }}">{{ d.value }}</div>
-                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar CLABE">
-                    📋 Copiar
-                  </button>
-                </div>
-                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
-
-        {# Card Section #}
-        {% with card_items=details|dictsort:"kind"|slice:":99" %}
-          {% for d in card_items %}
-            {% if d.kind == 'CARD' %}
-              {% if forloop.first %}
-              {% endif %}
-              <div class="card">
-                <div class="card-header">
-                  <span class="kind-label">Tarjeta de Debito</span>
-                  {% if d.brand == 'VISA' %}
-                    <span class="badge badge-visa">
-                      {% inline_svg 'brands/visa.svg' %}
-                    </span>
-                  {% elif d.brand == 'MASTERCARD' %}
-                    <span class="badge badge-mastercard">
-                      {% inline_svg 'brands/mc.svg' %}
-                    </span>
-                  {% elif d.brand %}
-                    <span class="badge badge-other">{{ d.brand }}</span>
-                  {% endif %}
-                </div>
-                {% if d.bank_name or d.alias %}
-                  <div class="meta">
-                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
-                  </div>
-                {% endif %}
-                <div class="value-container">
-                  <div class="value" id="val-card-{{ forloop.counter }}">{{ d.value }}</div>
-                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de tarjeta">
-                    📋 Copiar
-                  </button>
-                </div>
-                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
-
-        {# Account Section #}
-        {% with account_items=details|dictsort:"kind"|slice:":99" %}
-          {% for d in account_items %}
-            {% if d.kind == 'ACCOUNT' %}
-              {% if forloop.first %}
-                <h2 class="section-title">Cuenta</h2>
-              {% endif %}
-              <div class="card">
-                <div class="card-header">
-                  <span class="kind-label">Cuenta</span>
-                </div>
-                {% if d.bank_name or d.alias %}
-                  <div class="meta">
-                    {% if d.bank_name %}{{ d.bank_name }}{% endif %}{% if d.bank_name and d.alias %} • {% endif %}{% if d.alias %}{{ d.alias }}{% endif %}
-                  </div>
-                {% endif %}
-                <div class="value-container">
-                  <div class="value" id="val-account-{{ forloop.counter }}">{{ d.value }}</div>
-                  <button class="btn" onclick="copyText('{{ d.value }}')" aria-label="Copiar número de cuenta">
-                    📋 Copiar
-                  </button>
-                </div>
-                <div class="updated">Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}</div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
-      {% else %}
-        <div class="empty-state">
-          <div class="empty-state-icon">💳</div>
-          <p>Aún no hay datos públicos.</p>
-        </div>
-      {% endif %}
-
-      <div class="footer">
-        Compartido vía cobrando-la • Si estos NO son tus datos, actualízalos en tu panel.
-      </div>
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, noarchive">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Datos de pago públicos de {{ owner.display_name|default:owner.email }}">
+    <title>Datos de pago de {{ owner.display_name|default:owner.email }}</title>
+    {% tailwind_css %}
+    <style>
+        /* Respeta preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        /* Estilos para SVG de las marcas */
+        .brand-svg {
+            width: 150px;
+            height: auto;
+            background-color: #fff;
+        }
+        .brand-svg svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-black text-white antialiased overflow-x-hidden min-h-screen">
+    
+    <!-- Gradientes de fondo -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#830AD1]/20 via-black to-[#88BA41]/15"></div>
+        <div class="absolute top-0 right-1/3 w-96 h-96 bg-[#830AD1]/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/3 w-96 h-96 bg-[#88BA41]/15 rounded-full blur-3xl"></div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <!-- Header sticky -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                
+                <!-- Logo -->
+                <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
+                        C
+                    </div>
+                    <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
+                </a>
+
+                <!-- Actions menu -->
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'dashboard' %}" 
+                       class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Volver al panel de configuración
+                    </a>
+                    <button 
+                        onclick="copyPublicLink()"
+                        class="inline-flex items-center gap-2 text-sm font-medium text-white px-4 py-2 rounded-lg bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition shadow-lg shadow-[#830AD1]/20"
+                        aria-label="Compartir enlace público">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Compartir</span>
+                    </button>
+                    <button 
+                        onclick="toggleQR()"
+                        class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-4 py-2 rounded-lg hover:bg-white/10 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition"
+                        aria-label="Mostrar código QR">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Código QR</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl py-8 sm:py-12">
+        
+        <!-- Welcome header -->
+        <div class="mb-8 sm:mb-12 text-center">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3">
+                Datos de pago de <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>
+            </h1>
+            <p class="text-lg text-white/60">
+                Datos necesarios para recibir transferencias
+            </p>
+        </div>
+
+        <!-- Cards de datos bancarios -->
+        {% if details %}
+            <div class="space-y-6 lg:space-y-8">
+
+                {# CLABE Section #}
+                {% with clabe_items=details|dictsort:"kind"|slice:":99" %}
+                    {% for d in clabe_items %}
+                        {% if d.kind == 'CLABE' %}
+                            <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8">
+                                
+                                <!-- Header del card -->
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-3xl">🏦</div>
+                                        <div>
+                                            <h2 class="text-xl sm:text-2xl font-semibold text-[#88BA41]">CLABE Interbancaria</h2>
+                                            {% if d.bank_code %}
+                                                <span class="inline-block mt-1 px-3 py-1 rounded-full bg-[#88BA41]/20 text-[#88BA41] text-xs font-semibold">
+                                                    Código Bancario: {{ d.bank_code }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata -->
+                                {% if d.bank_name or d.alias %}
+                                    <div class="mb-4 text-sm text-white/60">
+                                        {% if d.bank_name %}<span class="font-medium">{{ d.bank_name }}</span>{% endif %}
+                                        {% if d.bank_name and d.alias %} • {% endif %}
+                                        {% if d.alias %}<span>{{ d.alias }}</span>{% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Valor y botón de copiar -->
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+                                    <div class="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 font-mono text-lg sm:text-xl tracking-wider" id="val-clabe-{{ forloop.counter }}">
+                                        {{ d.value }}
+                                    </div>
+                                    <button 
+                                        onclick="copyText('{{ d.value }}')"
+                                        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition shadow-lg shadow-[#830AD1]/20"
+                                        aria-label="Copiar CLABE">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                        Copiar
+                                    </button>
+                                </div>
+
+                                <!-- Última actualización -->
+                                <div class="text-xs text-white/40">
+                                    Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+
+                {# Card Section #}
+                {% with card_items=details|dictsort:"kind"|slice:":99" %}
+                    {% for d in card_items %}
+                        {% if d.kind == 'CARD' %}
+                            <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8">
+                                
+                                <!-- Header del card -->
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-3xl">💳</div>
+                                        <div>
+                                            <h2 class="text-xl sm:text-2xl font-semibold text-[#830AD1]">Tarjeta de Débito</h2>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Badge de marca con SVG -->
+                                    <div class="flex items-center">
+                                        {% if d.brand == 'Visa' %}
+                                            <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
+                                                {% inline_svg 'brands/visa.svg' %}
+                                            </div>
+                                        {% elif d.brand == 'MasterCard' %}
+                                            <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
+                                                {% inline_svg 'brands/mc.svg' %}
+                                            </div>
+                                        {% elif d.brand %}
+                                            <span class="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-sm font-semibold">
+                                                {{ d.brand }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Metadata -->
+                                {% if d.bank_name or d.alias %}
+                                    <div class="mb-4 text-sm text-white/60">
+                                        {% if d.bank_name %}<span class="font-medium">{{ d.bank_name }}</span>{% endif %}
+                                        {% if d.bank_name and d.alias %} • {% endif %}
+                                        {% if d.alias %}<span>{{ d.alias }}</span>{% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Valor y botón de copiar -->
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+                                    <div class="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 font-mono text-lg sm:text-xl tracking-wider" id="val-card-{{ forloop.counter }}">
+                                        {{ d.value }}
+                                    </div>
+                                    <button 
+                                        onclick="copyText('{{ d.value }}')"
+                                        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition shadow-lg shadow-[#830AD1]/20"
+                                        aria-label="Copiar número de tarjeta">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                        Copiar
+                                    </button>
+                                </div>
+
+                                <!-- Última actualización -->
+                                <div class="text-xs text-white/40">
+                                    Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+
+                {# Account Section #}
+                {% with account_items=details|dictsort:"kind"|slice:":99" %}
+                    {% for d in account_items %}
+                        {% if d.kind == 'ACCOUNT' %}
+                            <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8">
+                                
+                                <!-- Header del card -->
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-3xl">🏧</div>
+                                        <div>
+                                            <h2 class="text-xl sm:text-2xl font-semibold text-[#88BA41]">Cuenta Bancaria</h2>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata -->
+                                {% if d.bank_name or d.alias %}
+                                    <div class="mb-4 text-sm text-white/60">
+                                        {% if d.bank_name %}<span class="font-medium">{{ d.bank_name }}</span>{% endif %}
+                                        {% if d.bank_name and d.alias %} • {% endif %}
+                                        {% if d.alias %}<span>{{ d.alias }}</span>{% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Valor y botón de copiar -->
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+                                    <div class="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 font-mono text-lg sm:text-xl tracking-wider" id="val-account-{{ forloop.counter }}">
+                                        {{ d.value }}
+                                    </div>
+                                    <button 
+                                        onclick="copyText('{{ d.value }}')"
+                                        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition shadow-lg shadow-[#830AD1]/20"
+                                        aria-label="Copiar número de cuenta">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                        Copiar
+                                    </button>
+                                </div>
+
+                                <!-- Última actualización -->
+                                <div class="text-xs text-white/40">
+                                    Última actualización: {% timezone "America/Mexico_City" %}{{ d.updated_at|date:"d/m/Y H:i" }}{% endtimezone %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+
+            </div>
+        {% else %}
+            <!-- Empty state -->
+            <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-12 sm:p-16 text-center">
+                <div class="text-6xl mb-6">💳</div>
+                <h2 class="text-2xl font-semibold mb-2">Aún no hay datos públicos</h2>
+                <p class="text-white/60">
+                    No se han compartido datos bancarios todavía
+                </p>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-white/10 bg-black/50 py-8 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center text-sm text-white/50">
+                <p>Compartido vía <span class="font-semibold text-white/70">Cobrando.la</span> • Si estos NO son tus datos, actualízalos en tu panel</p>
+                <p class="mt-2">© 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:underline hover:text-white/70 transition">GPL 3.0</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" 
+         class="fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg transform transition-all duration-300 opacity-0 translate-y-2 pointer-events-none" 
+         role="status" 
+         aria-live="polite">
+    </div>
 
     <!-- QR Modal -->
-    <div id="qr-modal" class="qr-modal" onclick="closeQRIfBackdrop(event)">
-      <div class="qr-content">
-        <button class="qr-close" onclick="toggleQR()" aria-label="Cerrar QR">×</button>
-        <div class="qr-title">Código QR</div>
-        <div class="qr-subtitle">Escanea para compartir este enlace</div>
-        <div id="qr-container"></div>
-      </div>
+    <div id="qr-modal" 
+         onclick="closeQRIfBackdrop(event)"
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        
+        <div class="relative rounded-2xl border border-white/20 bg-black/95 backdrop-blur-md shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95">
+            
+            <!-- Close button -->
+            <button 
+                onclick="toggleQR()"
+                class="absolute top-4 right-4 w-10 h-10 rounded-lg hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition flex items-center justify-center text-white/70 hover:text-white text-2xl font-light"
+                aria-label="Cerrar QR">
+                ×
+            </button>
+
+            <!-- Modal content -->
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold mb-2 bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">
+                    Código QR
+                </h2>
+                <p class="text-white/60 text-sm mb-6">
+                    Escanea para compartir este enlace
+                </p>
+                
+                <!-- QR Container -->
+                <div id="qr-container" class="flex items-center justify-center p-6 rounded-xl bg-white"></div>
+            </div>
+        </div>
     </div>
 
     {% url 'public_profile' public_slug=owner.public_slug as public_path %}
@@ -152,9 +343,10 @@
     
     <!-- Public profile script -->
     <script>
-      // Set public URL as global variable for use in external script
-      window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
+        // Set public URL as global variable for use in external script
+        window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
     </script>
     <script src="{% static 'js/public_profile.js' %}"></script>
-  </body>
+
+</body>
 </html>

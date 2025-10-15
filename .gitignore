@@ -64,6 +64,7 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
+db.sqlite2
 db.sqlite3
 db.sqlite3-journal
 
@@ -211,3 +212,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Theme static source maps
+theme/static_src/core.3562
+theme/static_src/core.3576
+theme/static_src/core.3844
+theme/static_src/core.3851
