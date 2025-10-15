@@ -515,30 +515,12 @@
         </div>
     </footer>
 
+
+    <!-- JAVASCRIPT: Menú móvil -->
+    <script src="{% static 'js/common.js' %}"></script>
+
     <!-- JAVASCRIPT: Menú móvil y acordeón FAQ (mínimo, sin dependencias) -->
     <script>
-        // MENÚ MÓVIL
-        (function() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuIcon = document.getElementById('menu-icon');
-            const closeIcon = document.getElementById('close-icon');
-
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-                    
-                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-                    mobileMenu.classList.toggle('hidden');
-                    
-                    if (menuIcon && closeIcon) {
-                        menuIcon.classList.toggle('hidden');
-                        closeIcon.classList.toggle('hidden');
-                    }
-                });
-            }
-        })();
-
         // ACORDEÓN FAQ
         (function() {
             const faqButtons = document.querySelectorAll('.faq-button');
@@ -572,29 +554,6 @@
                 });
             });
         })();
-
-        // Smooth scroll para navegación (opcional, mejora UX)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                if (targetId !== '#' && targetId.length > 1) {
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        e.preventDefault();
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        // Cerrar menú móvil si está abierto
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                            mobileMenuBtn.click();
-                        }
-                    }
-                }
-            });
-        });
     </script>
 
 </body>
