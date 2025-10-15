@@ -2,7 +2,7 @@
 Django>=5.2.6
 
 # Database adapter for PostgreSQL (opcional, si usas PostgreSQL en producción)
-# psycopg2-binary>=2.9.9
+psycopg2-binary>=2.9.9
 
 # WSGI server for production
 gunicorn>=21.2.0
