@@ -116,7 +116,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
                 <div class="max-w-4xl mx-auto">
                     <!-- Glass card centrado con borde de gradiente -->
-                    <div class="rounded-2xl border border-[#830AD1]/30 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/10 p-8 sm:p-12 lg:p-16 text-center">
+                    <div class="p-8 sm:p-12 lg:p-16 text-center">
                         
                         <!-- Título principal -->
                         <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight bg-gradient-to-r from-[#88BA41] via-[#a855f7] to-[#830AD1] bg-clip-text text-transparent mb-6">
@@ -183,28 +183,10 @@
 
                         <!-- Valor 2 -->
                         <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
-                            <div class="text-4xl mb-4">🌍</div>
-                            <h3 class="text-xl sm:text-2xl font-semibold mb-3">Código abierto</h3>
-                            <p class="text-white/70 leading-relaxed">
-                                La transparencia es fundamental. Todo el código está disponible bajo licencia GPL 3.0 para que la comunidad pueda auditarlo, mejorarlo y aprender de él.
-                            </p>
-                        </div>
-
-                        <!-- Valor 3 -->
-                        <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
                             <div class="text-4xl mb-4">✨</div>
                             <h3 class="text-xl sm:text-2xl font-semibold mb-3">Simplicidad</h3>
                             <p class="text-white/70 leading-relaxed">
                                 Una interfaz clara y directa. Sin complicaciones innecesarias, sin pasos confusos. Solo lo esencial para que compartas tus datos de forma rápida y segura.
-                            </p>
-                        </div>
-
-                        <!-- Valor 4 -->
-                        <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#830AD1]/40 transition duration-300">
-                            <div class="text-4xl mb-4">🚀</div>
-                            <h3 class="text-xl sm:text-2xl font-semibold mb-3">Innovación continua</h3>
-                            <p class="text-white/70 leading-relaxed">
-                                Estamos comprometidos a evolucionar la plataforma con nuevas funcionalidades, mejores validaciones y soporte para más métodos de pago.
                             </p>
                         </div>
 
@@ -311,8 +293,9 @@
                 <div class="max-w-4xl mx-auto">
                     
                     <!-- CTA Card -->
-                    <div class="rounded-2xl border border-[#830AD1]/30 bg-gradient-to-br from-[#830AD1]/10 via-[#830AD1]/5 to-[#88BA41]/10 backdrop-blur-md shadow-lg shadow-[#830AD1]/10 p-8 sm:p-12 lg:p-16 text-center">
+                    <div class="p-8 sm:p-12 lg:p-16 text-center">
                         
+                    {% if not user.is_authenticated %}
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent mb-6">
                             ¿Listo para simplificar tus transferencias?
                         </h2>
@@ -320,6 +303,15 @@
                         <p class="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-8">
                             Únete a Cobrando.la y comienza a compartir tus datos bancarios de forma segura, verificada y accesible.
                         </p>
+                    {% else %}
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent mb-6">
+                            ¿Listo para continuar con tus transferencias?
+                        </h2>
+                        
+                        <p class="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-8">
+                            Continúa utilizando Cobrando.la para gestionar tus datos bancarios de forma segura y eficiente.
+                        </p>
+                    {% endif %}
                         
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                             {% if user.is_authenticated %}
@@ -344,7 +336,7 @@
                         </div>
                         
                         <!-- Link adicional a GitHub -->
-                        <div class="mt-8 pt-8 border-t border-white/10">
+                        <div class="mt-8 pt-8">
                             <p class="text-white/60 mb-4">¿Desarrollador? Contribuye al proyecto</p>
                             <a href="https://github.com/ferdotdeb/cobrando-la" 
                                target="_blank" 
