@@ -73,7 +73,7 @@ class BankDetails(models.Model):
     
     class Brand(models.TextChoices):
         VISA = "Visa", "Visa"
-        MASTERCARD = "Mastercard", "Mastercard"
+        MASTERCARD = "MasterCard", "MasterCard"
         OTHER = "Other", "Other"
 
     class BankNameSource(models.TextChoices):
@@ -132,9 +132,9 @@ class BankDetails(models.Model):
 
         if self.kind == self.Kind.CLABE:
             if not re.fullmatch(r"\d{18}", val):
-                raise ValidationError({"value": "CLABE must be exactly 18 digits."})
+                raise ValidationError({"value": "La CLABE Interbancaria debe tener exactamente 18 dígitos."})
             if not clabe_checksum_ok(val):
-                raise ValidationError({"value": "CLABE checksum is invalid."})
+                raise ValidationError({"value": "La CLABE Interbancaria no es válida."})
 
             self.bank_code = val[:3]
             # Autocompleta bank_name si está vacío o si está en modo AUTO
@@ -150,22 +150,22 @@ class BankDetails(models.Model):
 
         elif self.kind == self.Kind.CARD:
             if not re.fullmatch(r"\d{16}", val):
-                raise ValidationError({"value": "Card number must be exactly 16 digits."})
+                raise ValidationError({"value": "El número de tarjeta debe tener exactamente 16 dígitos."})
             if not luhn_check(val):
-                raise ValidationError({"value": "Card number failed Luhn checksum."})
+                raise ValidationError({"value": "El número de tarjeta falló la verificación Luhn."})
             self.brand = detect_card_brand(val)
             # bank_code no aplica a tarjetas; limpia por si acaso
             self.bank_code = ""
 
         elif self.kind == self.Kind.ACCOUNT:
             if not re.fullmatch(r"\d{6,20}", val):
-                raise ValidationError({"value": "Account number must be 6–20 digits."})
+                raise ValidationError({"value": "El número de cuenta debe tener entre 6 y 20 dígitos."})
             # No hay autocompletado; respeta bank_name manual si existe
             self.bank_code = ""
             self.brand = ""
 
         else:
-            raise ValidationError({"kind": "Unsupported kind."})
+            raise ValidationError({"kind": "Tipo no soportado."})
 
     def save(self, *args, **kwargs):
         # Garantiza que clean() se ejecute al guardar (incluye normalización)

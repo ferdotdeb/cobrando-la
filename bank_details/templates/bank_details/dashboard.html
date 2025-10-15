@@ -1,136 +1,561 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard - Administra tus datos bancarios en Cobrando.la">
+    <title>Modifica tus datos</title>
+    {% tailwind_css %}
+    <style>
+        /* Respeta preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div class="wrap">
-    <div class="row">
-      <h1>Hola de nuevo {{ owner.display_name|default:owner.email }}!</h1>
-      <div>
-        <a href="{% url 'logout' %}">Cerrar sesión</a>
-        &nbsp;|&nbsp;
-        <a href="{% url 'public_profile' public_slug=owner.public_slug %}" target="_blank">Ver tus datos de pago</a>
-      </div>
+<body class="bg-black text-white antialiased overflow-x-hidden min-h-screen">
+    
+    <!-- Gradientes de fondo -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#830AD1]/20 via-black to-[#88BA41]/15"></div>
+        <div class="absolute top-0 right-1/3 w-96 h-96 bg-[#830AD1]/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/3 w-96 h-96 bg-[#88BA41]/15 rounded-full blur-3xl"></div>
     </div>
 
-    <!-- Mensajes -->
-    <div class="msgs">
-      {% for m in messages %}
-        <div class="msg {{ m.tags }}">{{ m }}</div>
-      {% endfor %}
-    </div>
+    <!-- Header sticky -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                
+                <!-- Logo -->
+                <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
+                        C
+                    </div>
+                    <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
+                </a>
 
-    <!-- CLABE -->
-    <div class="card">
-      <h2>CLABE {% if instances.clabe %}<span class="badge">Guardado</span>{% endif %}</h2>
-      <p class="meta">18 dígitos (con verificación) El nombre del banco se sugiere automáticamente con la verificación del código bancario, pero puedes editarlo.</p>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="form_kind" value="CLABE" />
-        {{ forms.CLABE.kind }}
-        <div class="grid">
-          <label>CLABE Interbancaria<br>{{ forms.CLABE.value }}</label>
-          <label>Nombre del banco (opcional)<br>{{ forms.CLABE.bank_name }}</label>
+                <!-- User menu -->
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-white/70 hidden md:inline">
+                        {{ owner.display_name|default:owner.email }}
+                    </span>
+                    <a href="{% url 'public_profile' public_slug=owner.public_slug %}" 
+                       target="_blank"
+                       class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Ver perfil público</span>
+                    </a>
+                    <a href="{% url 'logout' %}" 
+                       class="inline-flex items-center gap-2 text-sm font-medium text-red-400/80 hover:text-red-400 px-3 py-2 rounded-lg hover:bg-red-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Salir</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="grid">
-          <label>Alias (opcional)<br>{{ forms.CLABE.alias }}</label>
-          <label>¿Mostrar estos datos? {{ forms.CLABE.is_public }}</label>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-8 sm:py-12">
+        
+        <!-- Welcome header -->
+        <div class="mb-8 sm:mb-12">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-2">
+                ¡Hola de nuevo <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>!
+            </h1>
+            <p class="text-lg text-white/60">
+                Administra tus datos bancarios y controla su visibilidad
+            </p>
         </div>
-        {% if forms.CLABE.errors %}
-          <ul class="errorlist">
-            {% for field, errors in forms.CLABE.errors.items %}
-              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-            {% endfor %}
-          </ul>
+
+        <!-- Mensajes del sistema -->
+        {% if messages %}
+            <div class="mb-8 space-y-3">
+                {% for m in messages %}
+                    <div class="rounded-xl {% if m.tags == 'success' %}bg-green-500/10 border border-green-500/30{% elif m.tags == 'error' %}bg-red-500/10 border border-red-500/30{% else %}bg-blue-500/10 border border-blue-500/30{% endif %} p-4">
+                        <div class="flex items-start gap-3">
+                            {% if m.tags == 'success' %}
+                                <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            {% elif m.tags == 'error' %}
+                                <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            {% else %}
+                                <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            {% endif %}
+                            <span class="text-sm {% if m.tags == 'success' %}text-green-200{% elif m.tags == 'error' %}text-red-200{% else %}text-blue-200{% endif %}">{{ m }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-        <div style="margin-top:10px;">
-          <button type="submit">Guardar CLABE</button>
-          {% if instances.clabe %}
-            <button type="button" onclick="copyText('{{ instances.clabe.value }}')">Copiar CLABE</button>
-            <span class="meta">Código bancario: {{ instances.clabe.bank_code }} {% if instances.clabe.bank_name %}• {{ instances.clabe.bank_name }}{% endif %}</span>
-          {% endif %}
-        </div>
-      </form>
-    </div>
 
-    <!-- Card -->
-    <div class="card">
-      <h2>Tarjeta {% if instances.card %}<span class="badge">Guardado</span>{% endif %}</h2>
-      <p class="meta">16 dígitos, Visa o MasterCard (Validado con algoritmo Luhn). El nombre del banco debes ingresarlo de forma manual.</p>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="form_kind" value="CARD" />
-        {{ forms.CARD.kind }}
-        <div class="grid">
-          <label>Número de tarjeta<br>{{ forms.CARD.value }}</label>
-          <label>Nombre del banco (opcional)<br>{{ forms.CARD.bank_name }}</label>
-        </div>
-        <div class="grid">
-          <label>Alias (opcional)<br>{{ forms.CARD.alias }}</label>
-          <label>¿Mostrar estos datos? {{ forms.CARD.is_public }}</label>
-        </div>
-        {% if forms.CARD.errors %}
-          <ul class="errorlist">
-            {% for field, errors in forms.CARD.errors.items %}
-              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-        <div style="margin-top:10px;">
-          <button type="submit">Guardar Tarjeta</button>
-          {% if instances.card %}
-            <button type="button" onclick="copyText('{{ instances.card.value }}')">Copiar Tarjeta</button>
-            <span class="meta">{% if instances.card.brand %}Emisor: {{ instances.card.brand }}{% endif %}</span>
-          {% endif %}
-        </div>
-      </form>
-    </div>
+        <!-- Grid de formularios -->
+        <div class="space-y-6 lg:space-y-8">
 
-    <!-- Account -->
-    <div class="card">
-      <h2>Cuenta bancaria {% if instances.account %}<span class="badge">Guardado</span>{% endif %}</h2>
-      <p class="meta">6–20 dígitos. El nombre del banco es manual.</p>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="form_kind" value="ACCOUNT" />
-        {{ forms.ACCOUNT.kind }}
-        <div class="grid">
-          <label>Número de cuenta<br>{{ forms.ACCOUNT.value }}</label>
-          <label>Nombre del banco (opcional)<br>{{ forms.ACCOUNT.bank_name }}</label>
-        </div>
-        <div class="grid">
-          <label>Alias (opcional)<br>{{ forms.ACCOUNT.alias }}</label>
-          <label>¿Mostrar estos datos? {{ forms.ACCOUNT.is_public }}</label>
-        </div>
-        {% if forms.ACCOUNT.errors %}
-          <ul class="errorlist">
-            {% for field, errors in forms.ACCOUNT.errors.items %}
-              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-        <div style="margin-top:10px;">
-          <button type="submit">Guardar Cuenta</button>
-          {% if instances.account %}
-            <button type="button" onclick="copyText('{{ instances.account.value }}')">Copiar Cuenta</button>
-          {% endif %}
-        </div>
-      </form>
-    </div>
+            <!-- CLABE Card -->
+            <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8">
+                
+                <!-- Header del card -->
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-2xl sm:text-3xl font-semibold">CLABE Interbancaria</h2>
+                            {% if instances.clabe %}
+                                <span class="px-3 py-1 rounded-full bg-[#88BA41]/20 text-[#88BA41] text-xs font-semibold">Guardado</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm text-white/60 max-w-2xl">
+                            18 dígitos con verificación. El nombre del banco se sugiere automáticamente al detectar tu CLABE Interbancaria, pero puedes editarlo.
+                        </p>
+                    </div>
+                    <div class="text-4xl">🏦</div>
+                </div>
 
-  </div>
+                <!-- Formulario CLABE -->
+                <form method="post" novalidate class="space-y-5">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_kind" value="CLABE" />
+                    {{ forms.CLABE.kind }}
 
-  <script>
-    async function copyText(text) {
-      try { await navigator.clipboard.writeText((text || "").trim()); alert("¡Copiado!"); }
-      catch (e) { console.error(e); alert("Error al copiar"); }
-    }
-  </script>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- CLABE Interbancaria -->
+                        <div>
+                            <label for="{{ forms.CLABE.value.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                CLABE Interbancaria
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CLABE.value.name }}" 
+                                id="{{ forms.CLABE.value.id_for_label }}"
+                                value="{{ forms.CLABE.value.value|default:'' }}"
+                                maxlength="18"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border {% if forms.CLABE.value.errors %}border-red-500/50{% else %}border-white/20{% endif %} text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15 font-mono"
+                                placeholder="012345678901234567"
+                            />
+                        </div>
+
+                        <!-- Nombre del banco -->
+                        <div>
+                            <label for="{{ forms.CLABE.bank_name.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Nombre del banco (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CLABE.bank_name.name }}" 
+                                id="{{ forms.CLABE.bank_name.id_for_label }}"
+                                value="{{ forms.CLABE.bank_name.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: BBVA, Santander..."
+                            />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Alias -->
+                        <div>
+                            <label for="{{ forms.CLABE.alias.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Alias (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CLABE.alias.name }}" 
+                                id="{{ forms.CLABE.alias.id_for_label }}"
+                                value="{{ forms.CLABE.alias.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: Cuenta personal"
+                            />
+                        </div>
+
+                        <!-- Visibilidad -->
+                        <div class="flex items-center h-full pt-8">
+                            <label for="id_clabe_is_public" class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative inline-block">
+                                    <input 
+                                        type="checkbox" 
+                                        name="{{ forms.CLABE.is_public.name }}" 
+                                        id="id_clabe_is_public"
+                                        {% if forms.CLABE.is_public.value %}checked{% endif %}
+                                        class="sr-only peer"
+                                    />
+                                    <div class="w-12 h-6 bg-white/20 peer-checked:bg-gradient-to-r peer-checked:from-[#830AD1] peer-checked:to-[#88BA41] rounded-full transition-all duration-300 peer-hover:bg-white/30"></div>
+                                    <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
+                                </div>
+                                <span class="text-sm font-medium text-white/90">¿Mostrar estos datos públicamente?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Errores -->
+                    {% if forms.CLABE.errors %}
+                        <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+                            <ul class="space-y-1 text-sm text-red-200">
+                                {% for field, errors in forms.CLABE.errors.items %}
+                                    {% for e in errors %}<li class="flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>{{ e }}</li>{% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Info adicional si está guardado -->
+                    {% if instances.clabe %}
+                        <div class="rounded-xl bg-[#88BA41]/10 border border-[#88BA41]/20 p-4">
+                            <div class="flex items-center gap-2 text-sm text-white/80">
+                                <svg class="w-4 h-4 text-[#88BA41]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>
+                                    Código bancario: <strong>{{ instances.clabe.bank_code }}</strong>
+                                    {% if instances.clabe.bank_name %} • {{ instances.clabe.bank_name }}{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button 
+                            type="submit"
+                            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Guardar CLABE interbancaria
+                        </button>
+                        {% if instances.clabe %}
+                            <button 
+                                type="button"
+                                onclick="copyText('{{ instances.clabe.value }}')"
+                                class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-white/10 hover:bg-white/20 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copiar CLABE interbancaria
+                            </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Card/Tarjeta Card -->
+            <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8">
+                
+                <!-- Header del card -->
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-2xl sm:text-3xl font-semibold">Tarjeta de débito</h2>
+                            {% if instances.card %}
+                                <span class="px-3 py-1 rounded-full bg-[#830AD1]/20 text-[#830AD1] text-xs font-semibold">Guardado</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm text-white/60 max-w-2xl">
+                            16 dígitos, Visa o MasterCard. Validado con algoritmo Luhn. El nombre del banco debes ingresarlo manualmente.
+                        </p>
+                    </div>
+                    <div class="text-4xl">💳</div>
+                </div>
+
+                <!-- Formulario Tarjeta -->
+                <form method="post" novalidate class="space-y-5">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_kind" value="CARD" />
+                    {{ forms.CARD.kind }}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Número de tarjeta -->
+                        <div>
+                            <label for="{{ forms.CARD.value.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                16 dígitos de la tarjeta
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CARD.value.name }}" 
+                                id="{{ forms.CARD.value.id_for_label }}"
+                                value="{{ forms.CARD.value.value|default:'' }}"
+                                maxlength="16"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border {% if forms.CARD.value.errors %}border-red-500/50{% else %}border-white/20{% endif %} text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#830AD1] focus:border-transparent transition duration-300 hover:bg-white/15 font-mono"
+                                placeholder="1234567890123456"
+                            />
+                        </div>
+
+                        <!-- Nombre del banco -->
+                        <div>
+                            <label for="{{ forms.CARD.bank_name.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Nombre del banco (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CARD.bank_name.name }}" 
+                                id="{{ forms.CARD.bank_name.id_for_label }}"
+                                value="{{ forms.CARD.bank_name.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#830AD1] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: BBVA, Santander..."
+                            />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Alias -->
+                        <div>
+                            <label for="{{ forms.CARD.alias.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Alias (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.CARD.alias.name }}" 
+                                id="{{ forms.CARD.alias.id_for_label }}"
+                                value="{{ forms.CARD.alias.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#830AD1] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: Tarjeta débito"
+                            />
+                        </div>
+
+                        <!-- Visibilidad -->
+                        <div class="flex items-center h-full pt-8">
+                            <label for="id_card_is_public" class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative inline-block">
+                                    <input 
+                                        type="checkbox" 
+                                        name="{{ forms.CARD.is_public.name }}" 
+                                        id="id_card_is_public"
+                                        {% if forms.CARD.is_public.value %}checked{% endif %}
+                                        class="sr-only peer"
+                                    />
+                                    <div class="w-12 h-6 bg-white/20 peer-checked:bg-gradient-to-r peer-checked:from-[#830AD1] peer-checked:to-[#88BA41] rounded-full transition-all duration-300 peer-hover:bg-white/30"></div>
+                                    <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
+                                </div>
+                                <span class="text-sm font-medium text-white/90">¿Mostrar estos datos públicamente?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Errores -->
+                    {% if forms.CARD.errors %}
+                        <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+                            <ul class="space-y-1 text-sm text-red-200">
+                                {% for field, errors in forms.CARD.errors.items %}
+                                    {% for e in errors %}<li class="flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>{{ e }}</li>{% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Info adicional si está guardado -->
+                    {% if instances.card %}
+                        <div class="rounded-xl bg-[#830AD1]/10 border border-[#830AD1]/20 p-4">
+                            <div class="flex items-center gap-2 text-sm text-white/80">
+                                <svg class="w-4 h-4 text-[#830AD1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>
+                                    {% if instances.card.brand %}Emisor: <strong>{{ instances.card.brand }}</strong>{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button 
+                            type="submit"
+                            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Guardar digitos de la tarjeta
+                        </button>
+                        {% if instances.card %}
+                            <button 
+                                type="button"
+                                onclick="copyText('{{ instances.card.value }}')"
+                                class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-white/10 hover:bg-white/20 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copiar digitos de la tarjeta
+                            </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Cuenta bancaria Card -->
+            <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8">
+                
+                <!-- Header del card -->
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-2xl sm:text-3xl font-semibold">Cuenta bancaria</h2>
+                            {% if instances.account %}
+                                <span class="px-3 py-1 rounded-full bg-[#88BA41]/20 text-[#88BA41] text-xs font-semibold">Guardado</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm text-white/60 max-w-2xl">
+                            6–20 dígitos. El nombre del banco es manual.
+                        </p>
+                    </div>
+                    <div class="text-4xl">🏧</div>
+                </div>
+
+                <!-- Formulario Cuenta -->
+                <form method="post" novalidate class="space-y-5">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_kind" value="ACCOUNT" />
+                    {{ forms.ACCOUNT.kind }}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Número de cuenta -->
+                        <div>
+                            <label for="{{ forms.ACCOUNT.value.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Número de cuenta
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.ACCOUNT.value.name }}" 
+                                id="{{ forms.ACCOUNT.value.id_for_label }}"
+                                value="{{ forms.ACCOUNT.value.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border {% if forms.ACCOUNT.value.errors %}border-red-500/50{% else %}border-white/20{% endif %} text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15 font-mono"
+                                placeholder="123456789"
+                            />
+                        </div>
+
+                        <!-- Nombre del banco -->
+                        <div>
+                            <label for="{{ forms.ACCOUNT.bank_name.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Nombre del banco (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.ACCOUNT.bank_name.name }}" 
+                                id="{{ forms.ACCOUNT.bank_name.id_for_label }}"
+                                value="{{ forms.ACCOUNT.bank_name.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: BBVA, Santander..."
+                            />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Alias -->
+                        <div>
+                            <label for="{{ forms.ACCOUNT.alias.id_for_label }}" class="block text-sm font-medium text-white/90 mb-2">
+                                Alias (opcional)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="{{ forms.ACCOUNT.alias.name }}" 
+                                id="{{ forms.ACCOUNT.alias.id_for_label }}"
+                                value="{{ forms.ACCOUNT.alias.value|default:'' }}"
+                                class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
+                                placeholder="Ej: Cuenta de ahorros"
+                            />
+                        </div>
+
+                        <!-- Visibilidad -->
+                        <div class="flex items-center h-full pt-8">
+                            <label for="id_account_is_public" class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative inline-block">
+                                    <input 
+                                        type="checkbox" 
+                                        name="{{ forms.ACCOUNT.is_public.name }}" 
+                                        id="id_account_is_public"
+                                        {% if forms.ACCOUNT.is_public.value %}checked{% endif %}
+                                        class="sr-only peer"
+                                    />
+                                    <div class="w-12 h-6 bg-white/20 peer-checked:bg-gradient-to-r peer-checked:from-[#830AD1] peer-checked:to-[#88BA41] rounded-full transition-all duration-300 peer-hover:bg-white/30"></div>
+                                    <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
+                                </div>
+                                <span class="text-sm font-medium text-white/90">¿Mostrar estos datos públicamente?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Errores -->
+                    {% if forms.ACCOUNT.errors %}
+                        <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+                            <ul class="space-y-1 text-sm text-red-200">
+                                {% for field, errors in forms.ACCOUNT.errors.items %}
+                                    {% for e in errors %}<li class="flex items-center gap-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>{{ e }}</li>{% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button 
+                            type="submit"
+                            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition duration-300 shadow-lg shadow-[#830AD1]/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Guardar cuenta bancaria 
+                        </button>
+                        {% if instances.account %}
+                            <button 
+                                type="button"
+                                onclick="copyText('{{ instances.account.value }}')"
+                                class="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium text-white bg-white/10 hover:bg-white/20 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copiar cuenta bancaria 
+                            </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-white/10 bg-black/50 py-8 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div class="text-center text-sm text-white/50">
+                <p>© 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:underline hover:text-white/70 transition">GPL 3.0</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText((text || "").trim());
+                // Mostrar notificación de éxito
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg transform transition-all duration-300';
+                notification.innerHTML = '<div class="flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>¡Copiado al portapapeles!</span></div>';
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            } catch (e) {
+                console.error(e);
+                alert("Error al copiar. Por favor, intenta de nuevo.");
+            }
+        }
+    </script>
+
 </body>
 </html>
