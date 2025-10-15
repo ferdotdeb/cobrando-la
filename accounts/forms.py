@@ -26,7 +26,7 @@ class UserCreationForm(forms.ModelForm):
         phone = cleaned_data.get("phone")
         
         if not email and not phone:
-            raise forms.ValidationError("Debes proporcionar un email o un número de teléfono.")
+            self.add_error('email', "Debes proporcionar un email o un número de teléfono.")
         
         return cleaned_data
 
