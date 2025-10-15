@@ -21,6 +21,12 @@ def public_profile(request, public_slug: str):
 def dashboard(request):
     Kind = BankDetails.Kind
 
+    kind_labels = {
+        Kind.CLABE: "CLABE interbancaria",
+        Kind.CARD: "Tarjeta de debito",
+        Kind.ACCOUNT: "Cuenta bancaria",
+    }
+
     def _get_instance(k):
         return BankDetails.objects.filter(owner=request.user, kind=k).first()
 
@@ -50,7 +56,7 @@ def dashboard(request):
         if form.is_valid():
             try:
                 form.save(owner=request.user, kind=form_kind)
-                messages.success(request, "Tarjeta guardada.")
+                messages.success(request, f"{kind_labels[form_kind]} guardada correctamente.")
                 return redirect("dashboard")  # PRG: evita re-envíos
             except Exception as e:
                 messages.error(request, f"Error al guardar: {e}")
