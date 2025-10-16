@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'registration',  # django-registration-redux
     'accounts',
     'bank_details',
     'home',
@@ -155,6 +156,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
+
+# django-registration-redux settings
+ACCOUNT_ACTIVATION_DAYS = 7  # No se usará activación pero es requerido
+REGISTRATION_AUTO_LOGIN = True  # Login automático después del registro
+REGISTRATION_OPEN = True  # El registro está abierto
+
+# Configuración de email (para reset de contraseña)
+# En desarrollo, los emails se mostrarán en consola
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Para producción, configurar con un servidor SMTP real:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'tu-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'tu-contraseña-de-aplicación'
+DEFAULT_FROM_EMAIL = 'noreply@cobrando.la'
 
 # Slugs que no pueden usarse como enlace público
 RESERVED_PUBLIC_SLUGS = {
