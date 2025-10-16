@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',  # Debe estar ANTES de 'registration' para que sus templates tengan prioridad
-    'registration',  # django-registration-redux
+    'accounts',
+    'registration',
     'bank_details',
     'home',
     'tailwind',
@@ -163,15 +163,16 @@ REGISTRATION_AUTO_LOGIN = True  # Login automático después del registro
 REGISTRATION_OPEN = True  # El registro está abierto
 
 # Configuración de email (para reset de contraseña)
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'tu-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'tu-contraseña-de-aplicación'
-DEFAULT_FROM_EMAIL = 'noreply@cobrando.la'
+# EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+# EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@cobrando.la')
 
 # Slugs que no pueden usarse como enlace público
 RESERVED_PUBLIC_SLUGS = {
