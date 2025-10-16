@@ -39,19 +39,19 @@
                     <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                         Inicio
                     </a>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Dashboard
+                     {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Panel de configuración
                         </a>
-                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Mi Perfil
+                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Perfil público
                         </a>
                     {% else %}
-                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Iniciar Sesión
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Iniciar sesión
                         </a>
-                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Registrarse
+                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Crear cuenta
                         </a>
                     {% endif %}
                     <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
@@ -84,17 +84,17 @@
                     </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Dashboard
+                            Panel de configuración
                         </a>
                         <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Mi Perfil
+                            Perfil público
                         </a>
                     {% else %}
                         <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Iniciar Sesión
+                            Iniciar sesión
                         </a>
                         <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Registrarse
+                            Crear cuenta
                         </a>
                     {% endif %}
                     <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
@@ -361,8 +361,8 @@
 
                 <!-- Links del footer -->
                 <nav class="flex flex-wrap items-center justify-center gap-6 text-sm" aria-label="Enlaces del pie de página">
-                    <a href="{% url 'about' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
-                        Acerca de
+                    <a href="{% url 'terms' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
+                        Términos y Condiciones
                     </a>
                     <a href="{% url 'contact' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
                         Contacto

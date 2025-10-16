@@ -35,6 +35,9 @@
 
                 <!-- Desktop menu -->
                 <div class="hidden md:flex items-center gap-8">
+                    <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        Inicio
+                    </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Panel de configuración
@@ -75,6 +78,9 @@
             <!-- Mobile menu -->
             <div id="mobile-menu" class="hidden md:hidden pb-4">
                 <div class="flex flex-col gap-3">
+                    <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        Inicio
+                    </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
                             Panel de configuración
