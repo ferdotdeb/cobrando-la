@@ -22,7 +22,7 @@
         }
         /* Estilos para SVG de las marcas */
         .brand-svg {
-            width: 150px;
+            width: 180px;
             height: auto;
             background-color: #fff;
         }
@@ -177,11 +177,11 @@
                                     <div class="flex items-center">
                                         {% if d.brand == 'Visa' %}
                                             <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
-                                                {% inline_svg 'brands/visa.svg' %}
+                                                {% inline_svg 'brands/visa-debit.svg' %}
                                             </div>
                                         {% elif d.brand == 'MasterCard' %}
                                             <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
-                                                {% inline_svg 'brands/mc.svg' %}
+                                                {% inline_svg 'brands/mc-debit.svg' %}
                                             </div>
                                         {% elif d.brand %}
                                             <span class="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-sm font-semibold">
@@ -293,8 +293,8 @@
     <footer class="relative border-t border-white/10 bg-black/50 py-8 mt-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div class="text-center text-sm text-white/50">
-                <p>Compartido vía <span class="font-semibold text-white/70">Cobrando.la</span> • Si estos NO son tus datos, actualízalos en tu panel</p>
-                <p class="mt-2">© 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:underline hover:text-white/70 transition">GPL 3.0</a></p>
+                <p>Compartido con <span class="font-semibold text-white/70">Cobrando.la</span> • Si estos NO son tus datos, actualízalos en tu panel</p>
+                <p class="mt-2">© 2025 Cobrando.la</p>
             </div>
         </div>
     </footer>
@@ -327,7 +327,7 @@
                     Código QR
                 </h2>
                 <p class="text-white/60 text-sm mb-6">
-                    Escanea para compartir este enlace
+                    Escanea para compartir el enlace a este perfil público
                 </p>
                 
                 <!-- QR Container -->
@@ -346,7 +346,7 @@
         // Set public URL as global variable for use in external script
         window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
     </script>
+    
     <script src="{% static 'js/public_profile.js' %}"></script>
-
 </body>
 </html>
