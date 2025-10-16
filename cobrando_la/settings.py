@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',  # Debe estar ANTES de 'registration' para que sus templates tengan prioridad
     'registration',  # django-registration-redux
-    'accounts',
     'bank_details',
     'home',
     'tailwind',
@@ -163,9 +163,8 @@ REGISTRATION_AUTO_LOGIN = True  # Login automático después del registro
 REGISTRATION_OPEN = True  # El registro está abierto
 
 # Configuración de email (para reset de contraseña)
-# En desarrollo, los emails se mostrarán en consola
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# Para producción, configurar con un servidor SMTP real:
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
