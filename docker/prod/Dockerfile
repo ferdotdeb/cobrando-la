@@ -1,27 +1,21 @@
-# Stage 1: Compile tailwind
-
-FROM python:3.13-slim AS builder
+FROM python:3.13-slim 
 
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install django-tailwind
 
-COPY . .
-RUN python manage.py tailwind install
-RUN python manage.py tailwind build --production
+RUN apt update && apt install -y --no-install-recommends nodejs npm && rm -rf /var/lib/apt/lists/*
 
-# Stage 2: Production image
-
-FROM python:3.13-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project and static files
+COPY . .
 
-COPY --from=builder /app /app
+RUN python manage.py tailwind install
+RUN python manage.py tailwind build
+
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
 EXPOSE 8000
