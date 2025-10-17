@@ -1,0 +1,43 @@
+name: cobrando-la-prod
+
+services:
+  django:
+    restart: always
+    build:
+      context: ../../ # <- Esto apunta a la raíz del repo
+      dockerfile: docker/prod/Dockerfile
+    env_file:
+      - ../../.env
+    volumes:
+      - "${DOCKER_PROD_DJANGO_STATICFILES_PATH}:/app/staticfiles"
+      - "${DOCKER_PROD_DJANGO_UPLOADS_PATH}:/app/uploads"
+    ports:
+      - "${DOCKER_PROD_DJANGO_PORT}:8000"
+
+    command: >
+      sh -c "
+      if [ \"$DOCKER_PROD_DJANGO_RUN_MIGRATIONS\" = \"true\" ]; then
+          echo ''
+          echo ''
+          echo 'Ejecutando migraciones...'
+          python manage.py migrate
+          echo ''
+          echo ''
+      fi &&
+
+      if [ "$DOCKER_PROD_DJANGO_RUN_COLLECTSTATIC" = "true" ]; then
+          echo ''
+          echo ''
+          echo 'Ejecutando collectstatic...'
+          python manage.py collectstatic --noinput
+          echo ''
+          echo ''
+      fi &&
+
+      echo '' &&
+      echo '' &&
+      echo 'Iniciando gunicorn' &&
+      gunicorn --bind 0.0.0.0:8000 --workers ${DOCKER_PROD_DJANGO_GUNICORN_WORKERS:-3} --threads ${DOCKER_PROD_DJANGO_GUNICORN_THREADS:-3} --timeout 120 core.wsgi:application &&
+      echo ''
+      echo ''
+      "

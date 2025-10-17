@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s$#smovrw07h^4lmj_wc7s3^mjm6zapz5%zeo=m*(3lx*s29*l'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'registration',
     'bank_details',
     'home',
     'tailwind',
@@ -93,11 +94,15 @@ WSGI_APPLICATION = 'cobrando_la.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DJANGO_DB_NAME'),
+            'USER': config('DJANGO_DB_USER'),
+            'PASSWORD': config('DJANGO_DB_PASSWORD'),
+            'HOST': config('DJANGO_DB_HOST'),
+            'PORT': config('DJANGO_DB_PORT'),
+        }
     }
-}
 
 
 # Password validation
@@ -155,6 +160,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
+
+# django-registration-redux settings
+ACCOUNT_ACTIVATION_DAYS = 7  # No se usará activación pero es requerido
+REGISTRATION_AUTO_LOGIN = True  # Login automático después del registro
+REGISTRATION_OPEN = True  # El registro está abierto
+
+# Configuración de email (para reset de contraseña)
+# En desarrollo, mostrar emails en consola. En producción, enviar por SMTP
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@cobrando.la')
 
 # Slugs que no pueden usarse como enlace público
 RESERVED_PUBLIC_SLUGS = {

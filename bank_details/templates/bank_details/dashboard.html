@@ -42,9 +42,10 @@
 
                 <!-- User menu -->
                 <div class="flex items-center gap-4">
-                    <span class="text-sm text-white/70 hidden md:inline">
-                        {{ owner.display_name|default:owner.email }}
-                    </span>
+                    <a href="{% url 'password_reset' %}" 
+                    class="inline-flex items-center gap-2 text-sm font-medium text-[#88BA41] hover:text-[#88BA41]/80 px-3 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
+                        ¿Olvidaste tu contraseña?
+                    </a>
                     <a href="{% url 'public_profile' public_slug=owner.public_slug %}" 
                        target="_blank"
                        class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
@@ -59,7 +60,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        <span class="hidden sm:inline">Salir</span>
+                        <span class="hidden sm:inline">Cerrar Sesión</span>
                     </a>
                 </div>
             </div>
