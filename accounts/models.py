@@ -61,8 +61,8 @@ def _generate_public_slug(base: str | None = None) -> str:
     return rand
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True, null=True, blank=True)
-    phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True, default=None)
+    phone = models.CharField(max_length=20, unique=True, null=True, blank=True, default=None)
     display_name = models.CharField(max_length=150, blank=True, verbose_name="Nombre de usuario/Negocio") # Assignable name for the template
     public_slug = models.SlugField(
         max_length=32,
@@ -95,16 +95,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str: # Useful in admin and shell idk why copilot says that
         return self.email or self.phone or f"User {self.pk}"
     
-    def clean(self):
-        super().clean()
-        if not self.email and not self.phone:
-            raise ValidationError("Debe proporcionar un email o un número de teléfono.")
-        
-        # Validar que solo uno esté presente (opcional, depende de tu lógica)
-        # if self.email and self.phone:
-        #     raise ValidationError("Solo puede tener email o teléfono, no ambos.")
-    
     def save(self, *args, **kwargs):
+        # Convertir cadenas vacías en None para campos únicos
+        if self.email == '':
+            self.email = None
+        if self.phone == '':
+            self.phone = None
+        
         if not self.public_slug:
             base = None
             if self.display_name:
