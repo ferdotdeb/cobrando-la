@@ -16,6 +16,8 @@ services:
 
     command: >
       sh -c "
+      npm install --prefix=./theme/static_src &&
+
       if [ \"$DOCKER_PROD_DJANGO_RUN_MIGRATIONS\" = \"true\" ]; then
           echo ''
           echo ''
