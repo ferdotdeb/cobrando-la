@@ -6,7 +6,3 @@ RUN apt-get update && apt-get install -y --no-install-recommends git nodejs npm 
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-RUN python manage.py tailwind install

@@ -15,9 +15,9 @@ services:
       postgres_db:
         condition: service_healthy
     restart: no
-    command:  >
+    command: >
       sh -c "
-      npm install --prefix=./theme/static_src && python manage.py migrate && python manage.py tailwind dev
+        python manage.py tailwind install && python manage.py migrate && python manage.py tailwind dev
       "
 
   postgres_db:
