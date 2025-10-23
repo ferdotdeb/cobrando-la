@@ -26,11 +26,9 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl" aria-label="Navegación principal">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
-                <!-- Logo placeholder -->
+                <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.png' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
@@ -347,10 +345,8 @@
                 <!-- Logo y copyright -->
                 <div class="text-center md:text-left">
                     <div class="flex items-center gap-3 justify-center md:justify-start mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg">
-                            C
-                        </div>
-                        <span class="text-xl font-semibold">Cobrando.la</span>
+                        <img src="{% static 'images/logo.png' %}" alt="Cobrando.la" class="w-8 h-8 rounded-lg">
+                        <span class="font-semibold">Cobrando.la</span>
                     </div>
                     <p class="text-sm text-white/60">
                         © 2025 Cobrando.la
