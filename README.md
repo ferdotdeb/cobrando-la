@@ -12,7 +12,7 @@ Cobrando.la es una plataforma web para compartir de forma segura tus datos de pa
 ## 🚀 Stack
 
 - **Backend:** Django 5.2 + PostgreSQL 18
-- **Frontend:** TailwindCSS 4 + DaisyUI
+- **Frontend:** TailwindCSS 4
 - **Deploy:** Docker + Gunicorn
 
 ## 🛠️ Desarrollo
@@ -33,16 +33,17 @@ Cobrando.la es una plataforma web para compartir de forma segura tus datos de pa
 
 Edita las variables necesarias del archivo de ejemplo y crea tu .env
 
+3. **Levanta el entorno de desarrollo:**
 
-3. **Levanta el entorno:**
+Usa el contenedor de desarrollo ya configurado en la carpeta .devcontainer
+
+O bien, desde la terminal:
    ```bash
    cd docker/dev
    docker compose up
    ```
 
-O usa el contenedor de desarrollo ya configurado en la carpeta .devcontainer
-
-4. **Accede:** http://localhost:{puerto_configurado}
+4. **Accede:** http://localhost:puerto_configurado
 
 El servidor se recarga automáticamente con los cambios.
 
