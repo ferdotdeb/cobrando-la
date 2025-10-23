@@ -1,6 +1,6 @@
 <div align="center">
   <div style="display: inline-flex; align-items: center; gap: 12px;">
-    <img src="static/images/logo.png" alt="Cobrando.la" width="150px" height="150px">
+    <img src="static/images/logo.svg" alt="Cobrando.la" width="150px" height="150px">
     <h1 style="margin: 0; font-size: 48px;">Cobrando.la</h1>
   </div>
 </div>
