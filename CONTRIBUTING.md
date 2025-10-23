@@ -1,4 +1,4 @@
-# 🤝 Contribuyendo a Cobrando LA
+# 🤝 Contribuyendo a Cobrando.la
 
 ¡Gracias por tu interés en contribuir! Aquí te explicamos cómo hacerlo.
 
@@ -74,7 +74,3 @@ Las ideas son bienvenidas. Abre un issue con la etiqueta `enhancement` para disc
 ## ❓ Preguntas
 
 Si tienes dudas, abre un issue con la etiqueta `question` o contacta al maintainer.
-
----
-
-**Nota:** Al contribuir, aceptas que tu código se licencie bajo MIT.
