@@ -58,4 +58,4 @@ Asegúrate de configurar correctamente las variables de entorno en producción (
 
 ## 📝 Licencia
 
-MIT - Ver [LICENSE](LICENSE)
+GPL-3.0 - Ver [LICENSE](LICENSE)
