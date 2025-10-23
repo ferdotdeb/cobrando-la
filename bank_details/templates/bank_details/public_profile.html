@@ -335,12 +335,13 @@
     <!-- QRCode.js library (davidshimjs version) -->
     <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
     
-    <!-- Public profile script -->
     <script>
         // Set public URL as global variable for use in external script
         window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
     </script>
     
+    <!-- JavaScript exclusivo para public_profile  -->
     <script src="{% static 'js/public_profile.js' %}"></script>
+    
 </body>
 </html>
