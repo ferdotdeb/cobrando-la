@@ -27,14 +27,15 @@
                 
                 <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
                 <!-- Desktop menu -->
                 <div class="hidden md:flex items-center gap-8">
+                    <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        Inicio
+                    </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                             Panel de configuración
@@ -75,6 +76,9 @@
             <!-- Mobile menu -->
             <div id="mobile-menu" class="hidden md:hidden pb-4">
                 <div class="flex flex-col gap-3">
+                    <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
+                        Inicio
+                    </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
                             Panel de configuración
@@ -146,7 +150,6 @@
                     <!-- Sección 1: Aceptación -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">📋</span>
                             1. Aceptación de los Términos
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -162,7 +165,6 @@
                     <!-- Sección 2: Uso del Servicio -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">🔑</span>
                             2. Uso del Servicio
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -181,7 +183,6 @@
                     <!-- Sección 3: Privacidad y Seguridad -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">🔒</span>
                             3. Privacidad y Seguridad
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -200,7 +201,6 @@
                     <!-- Sección 4: Validación de Datos -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">✅</span>
                             4. Validación de Datos Bancarios
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -219,7 +219,6 @@
                     <!-- Sección 5: Propiedad Intelectual -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">⚖️</span>
                             5. Propiedad Intelectual y Licencia
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -238,7 +237,6 @@
                     <!-- Sección 6: Conducta Prohibida -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">🚫</span>
                             6. Conducta Prohibida
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -256,7 +254,6 @@
                     <!-- Sección 7: Limitación de Responsabilidad -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">⚠️</span>
                             7. Limitación de Responsabilidad
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -278,7 +275,6 @@
                     <!-- Sección 8: Modificaciones -->
                     <section>
                         <h2 class="text-2xl sm:text-3xl font-semibold mb-4 flex items-center gap-3">
-                            <span class="text-2xl" aria-hidden="true">🔄</span>
                             8. Modificaciones del Servicio
                         </h2>
                         <div class="text-white/80 leading-relaxed space-y-3">
@@ -350,9 +346,7 @@
                 <!-- Logo y copyright -->
                 <div class="text-center md:text-left">
                     <div class="flex items-center gap-3 justify-center md:justify-start mb-3">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-sm">
-                            C
-                        </div>
+                        <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-8 h-8 rounded-lg">
                         <span class="font-semibold">Cobrando.la</span>
                     </div>
                     <p class="text-sm text-white/60">
@@ -378,8 +372,8 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT: Menú móvil -->
-    <script src="{% static 'js/common.js' %}"></script>
+    <!-- JavaScript para el menú móvil -->
+    <script src="{% static 'js/mobile_menu.js' %}"></script>
 
 </body>
 </html>

@@ -26,11 +26,9 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl" aria-label="Navegación principal">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
-                <!-- Logo placeholder -->
+                <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
@@ -156,7 +154,6 @@
                     <!-- Callout principal -->
                     <div class="rounded-2xl border border-[#88BA41]/30 bg-gradient-to-br from-[#88BA41]/10 to-transparent backdrop-blur-md shadow-lg shadow-[#88BA41]/10 p-6 sm:p-10 mb-10">
                         <div class="flex items-start gap-4">
-                            <div class="text-4xl flex-shrink-0">🎯</div>
                             <div>
                                 <h3 class="text-2xl font-semibold mb-4">Accesibilidad financiera para todos</h3>
                                 <p class="text-white/80 leading-relaxed mb-4">
@@ -174,7 +171,6 @@
                         
                         <!-- Valor 1 -->
                         <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#830AD1]/40 transition duration-300">
-                            <div class="text-4xl mb-4">🔐</div>
                             <h3 class="text-xl sm:text-2xl font-semibold mb-3">Seguridad y privacidad</h3>
                             <p class="text-white/70 leading-relaxed">
                                 Proteger tus datos es nuestra prioridad. Implementamos validaciones automáticas y te damos control total sobre qué información compartes.
@@ -183,7 +179,6 @@
 
                         <!-- Valor 2 -->
                         <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
-                            <div class="text-4xl mb-4">✨</div>
                             <h3 class="text-xl sm:text-2xl font-semibold mb-3">Simplicidad</h3>
                             <p class="text-white/70 leading-relaxed">
                                 Una interfaz clara y directa. Sin complicaciones innecesarias, sin pasos confusos. Solo lo esencial para que compartas tus datos de forma rápida y segura.
@@ -210,7 +205,7 @@
                     <!-- Encabezado -->
                     <div class="text-center mb-12 sm:mb-16">
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
-                            Tecnologías y stack
+                            Tecnologías que impulsan Cobrando.la
                         </h2>
                         <p class="text-lg text-white/70">
                             Construido con tecnologías modernas, robustas y probadas en producción.
@@ -243,14 +238,14 @@
 
                         <!-- Docker -->
                         <div class="rounded-xl border border-[#830AD1]/20 bg-gradient-to-br from-[#830AD1]/5 to-transparent backdrop-blur-md p-6 hover:bg-[#830AD1]/10 hover:border-[#830AD1]/40 transition duration-300">
-                            <img src="{% static 'brands/docker.svg' %}" alt="Docker" class="w-[120px] h-[120px] mb-3">
+                            <img src="{% static 'brands/docker.svg' %}" alt="Docker" class="w-[130px] h-[130px] mb-3">
                             <h3 class="text-lg font-semibold mb-2">Docker</h3>
                             <p class="text-sm text-white/70">Contenedores para desarrollo y despliegue. Configuración reproducible y fácil de compartir.</p>
                         </div>
 
                         <!-- GitHub -->
                         <div class="rounded-xl border border-[#88BA41]/20 bg-gradient-to-br from-[#88BA41]/5 to-transparent backdrop-blur-md p-6 hover:bg-[#88BA41]/10 hover:border-[#88BA41]/40 transition duration-300">
-                            <img src="{% static 'brands/github.svg' %}" alt="GitHub" class="w-[70px] h-[70px] mb-3">
+                            <img src="{% static 'brands/github-white.svg' %}" alt="GitHub" class="w-[70px] h-[70px] mb-3">
                             <h3 class="text-lg font-semibold mb-2">GitHub</h3>
                             <p class="text-sm text-white/70">Control de versiones, colaboración y CI/CD. Todo el código disponible públicamente para la comunidad.</p>
                         </div>
@@ -337,7 +332,7 @@
                         
                         <!-- Link adicional a GitHub -->
                         <div class="mt-8 pt-8">
-                            <p class="text-white/60 mb-4">¿Desarrollador? Contribuye al proyecto</p>
+                            <p class="text-white/60 mb-4">¿Eres desarrollador? Contribuye al proyecto</p>
                             <a href="https://github.com/ferdotdeb/cobrando-la" 
                                target="_blank" 
                                rel="noopener noreferrer"
@@ -366,21 +361,16 @@
                 <!-- Logo y copyright -->
                 <div class="text-center md:text-left">
                     <div class="flex items-center gap-3 justify-center md:justify-start mb-3">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-sm">
-                            C
-                        </div>
+                        <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-8 h-8 rounded-lg">
                         <span class="font-semibold">Cobrando.la</span>
                     </div>
                     <p class="text-sm text-white/60">
-                        © 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded">GPL 3.0</a>
+                        © 2025 Cobrando.la
                     </p>
                 </div>
 
                 <!-- Links del footer -->
                 <nav class="flex flex-wrap items-center justify-center gap-6 text-sm" aria-label="Enlaces del pie de página">
-                    <a href="{% url 'home' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
-                        Inicio
-                    </a>
                     <a href="{% url 'terms' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
                         Términos y Condiciones
                     </a>
@@ -396,9 +386,9 @@
 
         </div>
     </footer>
-
-    <!-- JAVASCRIPT: Menú móvil -->
-    <script src="{% static 'js/common.js' %}"></script>
+    
+    <!-- JavaScript para el menú móvil -->
+    <script src="{% static 'js/mobile_menu.js' %}"></script>
 
 </body>
 </html>

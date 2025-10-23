@@ -1,24 +1,60 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm as DjangoPasswordResetForm
+from registration.forms import RegistrationForm
 
 from .models import User
 
-class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirmar Contraseña', widget=forms.PasswordInput)
+class UserCreationForm(RegistrationForm):
+    """
+    Formulario de registro personalizado que extiende de RegistrationForm
+    para usar con django-registration-redux
+    """
+    email = forms.EmailField(
+        label='Email',
+        required=False,
+        help_text='Proporciona email o teléfono (al menos uno es requerido)',
+        widget=forms.EmailInput(attrs={
+            'autocomplete': 'email',
+            'placeholder': 'tu@email.com'
+        })
+    )
+    phone = forms.CharField(
+        label='Teléfono',
+        max_length=20,
+        required=False,
+        help_text='Formato: +52XXXXXXXXXX o XXXXXXXXXX',
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'tel',
+            'placeholder': '+52XXXXXXXXXX'
+        })
+    )
+    display_name = forms.CharField(
+        label='Nombre de usuario/Negocio',
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'name',
+            'placeholder': 'Tu nombre o negocio'
+        })
+    )
+    password1 = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={
+            'autocomplete': 'new-password',
+            'placeholder': '••••••••'
+        })
+    )
+    password2 = forms.CharField(
+        label='Confirmar Contraseña',
+        widget=forms.PasswordInput(attrs={
+            'autocomplete': 'new-password',
+            'placeholder': '••••••••'
+        })
+    )
 
     class Meta:
         model = User
-        fields = ('email', 'phone', 'display_name')
-        labels = {
-            'email': 'Email (opcional si proporcionas teléfono)',
-            'phone': 'Teléfono (opcional si proporcionas email)',
-            'display_name': 'Nombre de usuario/Negocio', # Displayed in the template
-        }
-        help_texts = {
-            'email': 'Proporciona email o teléfono (al menos uno es requerido)',
-            'phone': 'Formato: +52XXXXXXXXXX o XXXXXXXXXX',
-        }
+        fields = ('email', 'phone', 'display_name', 'password1', 'password2')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -30,8 +66,22 @@ class UserCreationForm(forms.ModelForm):
         
         return cleaned_data
 
-    # Verify that the two password entries match
+    def clean_email(self):
+        """Validar que el email no exista si se proporciona"""
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Este email ya está registrado.")
+        return email
+    
+    def clean_phone(self):
+        """Validar que el teléfono no exista si se proporciona"""
+        phone = self.cleaned_data.get('phone')
+        if phone and User.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("Este teléfono ya está registrado.")
+        return phone
+
     def clean_password2(self):
+        """Verificar que las dos contraseñas coincidan"""
         p1 = self.cleaned_data.get("password1")
         p2 = self.cleaned_data.get("password2")
         if p1 and p2 and p1 != p2:
@@ -39,11 +89,35 @@ class UserCreationForm(forms.ModelForm):
         return p2
 
     def save(self, commit=True):
+        """Guardar el usuario con la contraseña hasheada"""
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user
+
+
+class CustomPasswordResetForm(DjangoPasswordResetForm):
+    """
+    Formulario personalizado para reset de contraseña que soporta
+    tanto email como teléfono
+    """
+    email = forms.EmailField(
+        label='Email',
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'autocomplete': 'email',
+            'placeholder': 'tu@email.com'
+        })
+    )
+
+    def get_users(self, email):
+        """Obtener usuarios que coincidan con el email"""
+        active_users = User.objects.filter(
+            email__iexact=email,
+            is_active=True
+        )
+        return (u for u in active_users if u.has_usable_password())
 
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(

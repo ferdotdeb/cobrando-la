@@ -34,17 +34,16 @@
                 
                 <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
                 <!-- User menu -->
                 <div class="flex items-center gap-4">
-                    <span class="text-sm text-white/70 hidden md:inline">
-                        {{ owner.display_name|default:owner.email }}
-                    </span>
+                    <a href="{% url 'password_reset' %}" 
+                    class="inline-flex items-center gap-2 text-sm font-medium text-[#88BA41] hover:text-[#88BA41]/80 px-3 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
+                        ¿Olvidaste tu contraseña?
+                    </a>
                     <a href="{% url 'public_profile' public_slug=owner.public_slug %}" 
                        target="_blank"
                        class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
@@ -59,7 +58,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        <span class="hidden sm:inline">Salir</span>
+                        <span class="hidden sm:inline">Cerrar Sesión</span>
                     </a>
                 </div>
             </div>
@@ -72,7 +71,7 @@
         <!-- Welcome header -->
         <div class="mb-8 sm:mb-12">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-2">
-                ¡Hola de nuevo <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>!
+                ¡Hola de nuevo <span class="bg-gradient-to-tr from-[#88BA41] via-[#88BA41] to-[#88BA41] bg-clip-text text-transparent drop-shadow-lg">{{ owner.display_name|default:owner.email }}</span>!
             </h1>
             <p class="text-lg text-white/60">
                 Administra tus datos bancarios y controla su visibilidad
@@ -124,7 +123,6 @@
                             18 dígitos con verificación. El nombre del banco se sugiere automáticamente al detectar tu CLABE Interbancaria, pero puedes editarlo.
                         </p>
                     </div>
-                    <div class="text-4xl">🏦</div>
                 </div>
 
                 <!-- Formulario CLABE -->
@@ -268,7 +266,6 @@
                             16 dígitos, Visa o MasterCard. Validado con algoritmo Luhn. El nombre del banco debes ingresarlo manualmente.
                         </p>
                     </div>
-                    <div class="text-4xl">💳</div>
                 </div>
 
                 <!-- Formulario Tarjeta -->
@@ -411,7 +408,6 @@
                             6–20 dígitos. El nombre del banco es manual.
                         </p>
                     </div>
-                    <div class="text-4xl">🏧</div>
                 </div>
 
                 <!-- Formulario Cuenta -->
@@ -531,31 +527,13 @@
     <footer class="relative border-t border-white/10 bg-black/50 py-8 mt-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div class="text-center text-sm text-white/50">
-                <p>© 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:underline hover:text-white/70 transition">GPL 3.0</a></p>
+                <p class="mt-2">© 2025 Cobrando.la</p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script>
-        async function copyText(text) {
-            try {
-                await navigator.clipboard.writeText((text || "").trim());
-                // Mostrar notificación de éxito
-                const notification = document.createElement('div');
-                notification.className = 'fixed bottom-4 right-4 z-50 px-6 py-3 rounded-xl bg-green-500/90 text-white font-medium shadow-lg transform transition-all duration-300';
-                notification.innerHTML = '<div class="flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>¡Copiado al portapapeles!</span></div>';
-                document.body.appendChild(notification);
-                setTimeout(() => {
-                    notification.style.opacity = '0';
-                    setTimeout(() => notification.remove(), 300);
-                }, 2000);
-            } catch (e) {
-                console.error(e);
-                alert("Error al copiar. Por favor, intenta de nuevo.");
-            }
-        }
-    </script>
-
+    <!-- JavaScript exclusivo para el panel de configuración -->
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    
 </body>
 </html>

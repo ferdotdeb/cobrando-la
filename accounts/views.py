@@ -1,18 +1,10 @@
-from django.contrib.auth import login, logout
-from django.shortcuts import render, redirect
-from .forms import UserCreationForm
-
-def signup(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # login inmediato tras registro
-            return redirect("dashboard")
-    else:
-        form = UserCreationForm()
-    return render(request, "accounts/signup.html", {"form": form})
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 def logout_view(request):
+    """
+    Vista personalizada para logout.
+    django-registration maneja el signup automáticamente.
+    """
     logout(request)
     return redirect("home")

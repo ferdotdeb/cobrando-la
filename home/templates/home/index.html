@@ -25,11 +25,9 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl" aria-label="Navegación principal">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
-                <!-- Logo placeholder -->
-                <a href="#hero" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                <!-- Logo -->
+                <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
@@ -124,7 +122,7 @@
                         
                         <!-- Subcopy -->
                         <p class="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-8">
-                            Comparte tus datos bancarios de forma segura y accesible. Verificación de cuenta CLABE, validación de tarjeta de débito y protección de tus datos.
+                            Comparte tus datos bancarios de forma segura y accesible. Con validación de CLABE interbancaria y tarjeta de débito, siempre protegiendo tus datos.
                         </p>
                         
                         <!-- CTA primario -->
@@ -167,7 +165,6 @@
                     
                     <!-- Card 1: CLABE -->
                     <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
-                        <div class="text-4xl mb-4">🏦</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Verificación de CLABE interbancaria</h3>
                         <p class="text-white/70 leading-relaxed">
                             Nuestro sistema valida que tu cuenta CLABE tenga el formato correcto y corresponda a un banco mexicano registrado.
@@ -176,7 +173,6 @@
 
                     <!-- Card 2: Tarjetas -->
                     <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#830AD1]/40 transition duration-300">
-                        <div class="text-4xl mb-4">💳</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Validación de tarjetas</h3>
                         <p class="text-white/70 leading-relaxed">
                         Algoritmo de Luhn integrado para verificar tarjetas de débito Visa y MasterCard. Sin almacenar datos sensibles completos (CVV y fecha de vencimiento).
@@ -185,10 +181,9 @@
 
                     <!-- Card 3: Tiempo real -->
                     <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
-                        <div class="text-4xl mb-4">⚡</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Validación instantánea</h3>
                         <p class="text-white/70 leading-relaxed">
-                            Recibe retroalimentación inmediata al ingresar tus datos. Sin esperas, sin errores.
+                            Comprueba si tus datos son correctos al instante, sin esperas, sin errores.
                         </p>
                     </div>
 
@@ -213,14 +208,13 @@
                             Seguridad por defecto
                         </h2>
                         <p class="text-lg text-white/70">
-                            Tu privacidad y protección están en el centro de nuestra plataforma.
+                            Tu privacidad y protección son prioridad.
                         </p>
                     </div>
 
                     <!-- Callout principal -->
                     <div class="rounded-2xl border border-[#830AD1]/30 bg-gradient-to-br from-[#830AD1]/10 to-transparent backdrop-blur-md shadow-lg shadow-[#830AD1]/10 p-6 sm:p-10 mb-10">
                         <div class="flex items-start gap-4">
-                            <div class="text-3xl flex-shrink-0">🔒</div>
                             <div>
                                 <h3 class="text-2xl font-semibold mb-3">Protección integral</h3>
                                 <ul class="space-y-3 text-white/80">
@@ -250,17 +244,16 @@
                     <!-- Paso a paso: ocultar/mostrar datos -->
                     <div class="rounded-2xl border border-[#88BA41]/30 bg-gradient-to-br from-[#88BA41]/10 to-transparent backdrop-blur-md shadow-lg shadow-[#88BA41]/10 p-6 sm:p-10">
                         <h3 class="text-2xl font-semibold mb-6 flex items-center gap-3">
-                            <span class="text-2xl">👁️</span>
                             ¿Cómo oculto o muestro mis datos?
                         </h3>
                         <ol class="space-y-4 text-white/80">
                             <li class="flex gap-4">
                                 <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-tr from-[#830AD1] to-[#88BA41] flex items-center justify-center font-semibold text-sm">1</span>
-                                <span>Ingresa a tu <strong>Dashboard</strong> desde el menú principal.</span>
+                                <span>Ingresa a tu <strong>panel de configuración</strong> desde el menú principal.</span>
                             </li>
                             <li class="flex gap-4">
                                 <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-tr from-[#830AD1] to-[#88BA41] flex items-center justify-center font-semibold text-sm">2</span>
-                                <span>Navega a la sección de <strong>Datos bancarios</strong>.</span>
+                                <span>Navega a la sección de <strong>datos bancarios</strong>.</span>
                             </li>
                             <li class="flex gap-4">
                                 <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-tr from-[#830AD1] to-[#88BA41] flex items-center justify-center font-semibold text-sm">3</span>
@@ -315,39 +308,18 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         
                         <div class="rounded-xl border border-[#88BA41]/20 bg-gradient-to-br from-[#88BA41]/5 to-transparent p-6 hover:bg-[#88BA41]/10 hover:border-[#88BA41]/40 transition duration-300">
-                            <div class="text-3xl mb-3">🔍</div>
                             <h3 class="text-lg font-semibold mb-2">Transparencia</h3>
                             <p class="text-sm text-white/70">Revisa cada línea de código y cómo manejamos tus datos.</p>
                         </div>
 
-                        <div class="rounded-xl border border-[#830AD1]/20 bg-gradient-to-br from-[#830AD1]/5 to-transparent p-6 hover:bg-[#830AD1]/10 hover:border-[#830AD1]/40 transition duration-300">
-                            <div class="text-3xl mb-3">🛡️</div>
-                            <h3 class="text-lg font-semibold mb-2">Auditabilidad</h3>
-                            <p class="text-sm text-white/70">Cualquier experto puede verificar la seguridad del sistema.</p>
-                        </div>
-
                         <div class="rounded-xl border border-[#88BA41]/20 bg-gradient-to-br from-[#88BA41]/5 to-transparent p-6 hover:bg-[#88BA41]/10 hover:border-[#88BA41]/40 transition duration-300">
-                            <div class="text-3xl mb-3">🤝</div>
                             <h3 class="text-lg font-semibold mb-2">Comunidad</h3>
                             <p class="text-sm text-white/70">Contribuye con mejoras y ayuda a evolucionar la plataforma.</p>
                         </div>
 
-                        <div class="rounded-xl border border-[#830AD1]/20 bg-gradient-to-br from-[#830AD1]/5 to-transparent p-6 hover:bg-[#830AD1]/10 hover:border-[#830AD1]/40 transition duration-300">
-                            <div class="text-3xl mb-3">🚀</div>
-                            <h3 class="text-lg font-semibold mb-2">Innovación</h3>
-                            <p class="text-sm text-white/70">Experimenta y personaliza la plataforma según tus necesidades.</p>
-                        </div>
-
                         <div class="rounded-xl border border-[#88BA41]/20 bg-gradient-to-br from-[#88BA41]/5 to-transparent p-6 hover:bg-[#88BA41]/10 hover:border-[#88BA41]/40 transition duration-300">
-                            <div class="text-3xl mb-3">📚</div>
                             <h3 class="text-lg font-semibold mb-2">Aprendizaje</h3>
                             <p class="text-sm text-white/70">Estudia el código, aprende o implementa mejores prácticas de desarrollo.</p>
-                        </div>
-
-                        <div class="rounded-xl border border-[#830AD1]/20 bg-gradient-to-br from-[#830AD1]/5 to-transparent p-6 hover:bg-[#830AD1]/10 hover:border-[#830AD1]/40 transition duration-300">
-                            <div class="text-3xl mb-3">⚖️</div>
-                            <h3 class="text-lg font-semibold mb-2">Licencia GPL 3.0</h3>
-                            <p class="text-sm text-white/70">Usa, modifica y distribuye bajo licencia libre.</p>
                         </div>
 
                     </div>
@@ -487,9 +459,7 @@
                 <!-- Logo y copyright -->
                 <div class="text-center md:text-left">
                     <div class="flex items-center gap-3 justify-center md:justify-start mb-3">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-sm">
-                            C
-                        </div>
+                        <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-8 h-8 rounded-lg">
                         <span class="font-semibold">Cobrando.la</span>
                     </div>
                     <p class="text-sm text-white/60">
@@ -515,10 +485,10 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT: Menú móvil -->
-    <script src="{% static 'js/common.js' %}"></script>
+    <!-- JavaScript para el menú móvil -->
+    <script src="{% static 'js/mobile_menu.js' %}"></script>
 
-    <!-- JAVASCRIPT: Menú móvil y acordeón FAQ (mínimo, sin dependencias) -->
+    <!-- JavaScript para el acordeón FAQ (mínimo, sin dependencias) -->
     <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

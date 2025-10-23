@@ -22,7 +22,7 @@
         }
         /* Estilos para SVG de las marcas */
         .brand-svg {
-            width: 150px;
+            width: 180px;
             height: auto;
             background-color: #fff;
         }
@@ -48,20 +48,19 @@
                 
                 <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
                 <!-- Actions menu -->
                 <div class="flex items-center gap-3">
                     <a href="{% url 'dashboard' %}" 
-                       class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
+                       class="inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        Volver al panel de configuración
+                        <span class="hidden sm:inline">Volver al panel de configuración</span>
+                        <span class="sm:hidden">Volver</span>
                     </a>
                     <button 
                         onclick="copyPublicLink()"
@@ -92,7 +91,7 @@
         <!-- Welcome header -->
         <div class="mb-8 sm:mb-12 text-center">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3">
-                Datos de pago de <span class="bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] bg-clip-text text-transparent">{{ owner.display_name|default:owner.email }}</span>
+                Datos de pago de <span class="bg-gradient-to-tr from-[#88BA41] via-[#88BA41] to-[#88BA41] bg-clip-text text-transparent drop-shadow-lg">{{ owner.display_name|default:owner.email }}</span>
             </h1>
             <p class="text-lg text-white/60">
                 Datos necesarios para recibir transferencias
@@ -112,7 +111,6 @@
                                 <!-- Header del card -->
                                 <div class="flex items-start justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="text-3xl">🏦</div>
                                         <div>
                                             <h2 class="text-xl sm:text-2xl font-semibold text-[#88BA41]">CLABE Interbancaria</h2>
                                             {% if d.bank_code %}
@@ -167,7 +165,6 @@
                                 <!-- Header del card -->
                                 <div class="flex items-start justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="text-3xl">💳</div>
                                         <div>
                                             <h2 class="text-xl sm:text-2xl font-semibold text-[#830AD1]">Tarjeta de Débito</h2>
                                         </div>
@@ -177,11 +174,11 @@
                                     <div class="flex items-center">
                                         {% if d.brand == 'Visa' %}
                                             <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
-                                                {% inline_svg 'brands/visa.svg' %}
+                                                {% inline_svg 'brands/visa-debit.svg' %}
                                             </div>
                                         {% elif d.brand == 'MasterCard' %}
                                             <div class="brand-svg px-3 py-2 rounded-lg bg-white/10 border border-white/20">
-                                                {% inline_svg 'brands/mc.svg' %}
+                                                {% inline_svg 'brands/mc-debit.svg' %}
                                             </div>
                                         {% elif d.brand %}
                                             <span class="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-sm font-semibold">
@@ -234,7 +231,6 @@
                                 <!-- Header del card -->
                                 <div class="flex items-start justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="text-3xl">🏧</div>
                                         <div>
                                             <h2 class="text-xl sm:text-2xl font-semibold text-[#88BA41]">Cuenta Bancaria</h2>
                                         </div>
@@ -279,7 +275,6 @@
         {% else %}
             <!-- Empty state -->
             <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-12 sm:p-16 text-center">
-                <div class="text-6xl mb-6">💳</div>
                 <h2 class="text-2xl font-semibold mb-2">Aún no hay datos públicos</h2>
                 <p class="text-white/60">
                     No se han compartido datos bancarios todavía
@@ -293,8 +288,8 @@
     <footer class="relative border-t border-white/10 bg-black/50 py-8 mt-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div class="text-center text-sm text-white/50">
-                <p>Compartido vía <span class="font-semibold text-white/70">Cobrando.la</span> • Si estos NO son tus datos, actualízalos en tu panel</p>
-                <p class="mt-2">© 2025 Cobrando.la — <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:underline hover:text-white/70 transition">GPL 3.0</a></p>
+                <p>Compartido con <span class="font-semibold text-white/70">Cobrando.la</span> • Si estos NO son tus datos, actualízalos en tu panel</p>
+                <p class="mt-2">© 2025 Cobrando.la</p>
             </div>
         </div>
     </footer>
@@ -327,7 +322,7 @@
                     Código QR
                 </h2>
                 <p class="text-white/60 text-sm mb-6">
-                    Escanea para compartir este enlace
+                    Escanea para compartir el enlace a este perfil público
                 </p>
                 
                 <!-- QR Container -->
@@ -341,12 +336,13 @@
     <!-- QRCode.js library (davidshimjs version) -->
     <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
     
-    <!-- Public profile script -->
     <script>
         // Set public URL as global variable for use in external script
         window.PUBLIC_URL = window.location.origin + "{{ public_path }}";
     </script>
+    
+    <!-- JavaScript exclusivo para public_profile  -->
     <script src="{% static 'js/public_profile.js' %}"></script>
-
+    
 </body>
 </html>

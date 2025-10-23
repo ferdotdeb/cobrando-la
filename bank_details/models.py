@@ -62,7 +62,7 @@ BANK_CODE_MAP = {
     "072": "Banorte",
     "638": "Nu Bank",
     "722": "Mercado Pago"
-    # TODO: añade más códigos si lo deseas
+    # TODO: añadir mas codigos de bancos
 }
 
 class BankDetails(models.Model):

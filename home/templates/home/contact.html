@@ -26,11 +26,9 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl" aria-label="Navegación principal">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
-                <!-- Logo placeholder -->
+                <!-- Logo -->
                 <a href="{% url 'home' %}" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded-lg">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg transition group-hover:scale-105">
-                        C
-                    </div>
+                    <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-10 h-10 rounded-xl transition group-hover:scale-105">
                     <span class="text-xl font-semibold hidden sm:inline">Cobrando.la</span>
                 </a>
 
@@ -39,19 +37,19 @@
                     <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
                         Inicio
                     </a>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Dashboard
+                     {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Panel de configuración
                         </a>
-                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Mi Perfil
+                        <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Perfil público
                         </a>
                     {% else %}
-                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Iniciar Sesión
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Iniciar sesión
                         </a>
-                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
-                            Registrarse
+                        <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+                            Crear cuenta
                         </a>
                     {% endif %}
                     <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded px-2 py-1 transition">
@@ -84,17 +82,17 @@
                     </a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Dashboard
+                            Panel de configuración
                         </a>
                         <a href="{% url 'public_profile' public_slug=user.public_slug %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Mi Perfil
+                            Perfil público
                         </a>
                     {% else %}
                         <a href="{% url 'login' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Iniciar Sesión
+                            Iniciar sesión
                         </a>
                         <a href="{% url 'signup' %}" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
-                            Registrarse
+                            Crear cuenta
                         </a>
                     {% endif %}
                     <a href="https://github.com/ferdotdeb/cobrando-la" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-white/80 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
@@ -166,7 +164,6 @@
                     
                     <!-- Card 1: Background -->
                     <div class="rounded-2xl border border-[#88BA41]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#88BA41]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#88BA41]/40 transition duration-300">
-                        <div class="text-4xl mb-4">💻</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Desarrollo Web</h3>
                         <p class="text-white/70 leading-relaxed mb-4">
                             Me especializo en Python y Django para el backend, con experiencia en desarrollo frontend usando tecnologías modernas como TailwindCSS.
@@ -178,7 +175,6 @@
 
                     <!-- Card 2: Aprendizaje -->
                     <div class="rounded-2xl border border-[#830AD1]/20 bg-white/5 backdrop-blur-md shadow-lg shadow-[#830AD1]/5 p-6 sm:p-8 hover:scale-[1.01] hover:border-[#830AD1]/40 transition duration-300">
-                        <div class="text-4xl mb-4">📚</div>
                         <h3 class="text-xl sm:text-2xl font-semibold mb-3">Siempre Aprendiendo</h3>
                         <p class="text-white/70 leading-relaxed mb-4">
                             La tecnología nunca deja de evolucionar, y yo tampoco. Constantemente estoy explorando nuevas herramientas y mejores prácticas.
@@ -349,10 +345,8 @@
                 <!-- Logo y copyright -->
                 <div class="text-center md:text-left">
                     <div class="flex items-center gap-3 justify-center md:justify-start mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#830AD1] via-[#830AD1]/70 to-[#88BA41] flex items-center justify-center font-bold text-lg">
-                            C
-                        </div>
-                        <span class="text-xl font-semibold">Cobrando.la</span>
+                        <img src="{% static 'images/logo.svg' %}" alt="Cobrando.la" class="w-8 h-8 rounded-lg">
+                        <span class="font-semibold">Cobrando.la</span>
                     </div>
                     <p class="text-sm text-white/60">
                         © 2025 Cobrando.la
@@ -361,8 +355,8 @@
 
                 <!-- Links del footer -->
                 <nav class="flex flex-wrap items-center justify-center gap-6 text-sm" aria-label="Enlaces del pie de página">
-                    <a href="{% url 'about' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
-                        Acerca de
+                    <a href="{% url 'terms' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
+                        Términos y Condiciones
                     </a>
                     <a href="{% url 'contact' %}" class="text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BA41] rounded transition">
                         Contacto
@@ -376,9 +370,9 @@
 
         </div>
     </footer>
-
-    <!-- JAVASCRIPT: Menú móvil -->
-    <script src="{% static 'js/common.js' %}"></script>
+    
+    <!-- JavaScript para el menú móvil -->
+    <script src="{% static 'js/mobile_menu.js' %}"></script>
 
 </body>
 </html>
