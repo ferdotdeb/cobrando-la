@@ -1,17 +1,31 @@
-# 🤝 Contribuyendo a Cobrando.la
+# 📋 ¿Cómo Contribuir?
 
 ¡Gracias por tu interés en contribuir! Aquí te explicamos cómo hacerlo.
 
-## 📋 Cómo Contribuir
+### 1. Crea tu fork
 
-### 1. Fork y Branch
+Crea el fork el repo en GitHub, tienes el enlace aqui: [Cobrando.la](https://github.com/ferdotdeb/cobrando-la) 
+
+### Crea una branch descriptiva:
+
+Luego clona tu fork localmente y crea una branch nueva
 
 ```bash
-# Fork el repo en GitHub, luego:
 git clone https://github.com/TU_USUARIO/cobrando-la.git
 cd cobrando-la
-git checkout -b feature/mi-nueva-funcionalidad
+git branch feature/mi-nueva-funcionalidad
 ```
+
+Usamos convenciones semánticas para los nombres de las branches:
+
+- `feature:` nueva funcionalidad
+- `fix:` corrección de bugs
+- `docs:` cambios en documentación
+- `style:` formato, punto y coma, etc.
+- `refactor:` refactorización de código
+- `test:` añadir o modificar tests
+
+Asi tu branch sera descriptiva y facil de identificar.
 
 ### 2. Configura tu Entorno
 
@@ -28,7 +42,7 @@ Sigue las instrucciones del [README.md](README.md) para levantar el entorno de d
 
 ```bash
 git add .
-git commit -m "feat: descripción clara de tu cambio"
+git commit -m "(emoji) descripción clara de tu cambio"
 git push origin feature/mi-nueva-funcionalidad
 ```
 
@@ -42,15 +56,13 @@ git push origin feature/mi-nueva-funcionalidad
 
 ### Commits
 
-Usamos convenciones semánticas:
+Antes de hacer commit, asegúrate de que tu mensaje siga el siguiente formato:
 
-- `feat:` nueva funcionalidad
-- `fix:` corrección de bugs
-- `docs:` cambios en documentación
-- `style:` formato, punto y coma, etc.
-- `refactor:` refactorización de código
-- `test:` añadir o modificar tests
-- `chore:` tareas de mantenimiento
+Antes del mensaje recuerda usar gitmoji con el emoji correspondiente.
+
+Puedes consultar [gitmoji.dev](https://gitmoji.dev/) para tener una buena referencia de que emojis usar en tus commits.
+
+Asegúrate de que tus mensajes sean claros y concisos.
 
 ### Código
 
