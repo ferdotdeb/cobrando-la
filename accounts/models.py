@@ -96,6 +96,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             )
         ]
 
+    def clean(self):
+        """Validación a nivel de modelo"""
+        super().clean()
+        # Convertir cadenas vacías en None ANTES de validación
+        if self.email == '':
+            self.email = None
+        if self.phone == '':
+            self.phone = None
+        
+        # Validar que al menos uno esté presente
+        if not self.email and not self.phone:
+            raise ValidationError('Debes proporcionar un email o un número de teléfono.')
+
     def __str__(self) -> str: # Useful in admin and shell idk why copilot says that
         return self.email or self.phone or f"User {self.pk}"
     

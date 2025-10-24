@@ -54,6 +54,12 @@ TAILWIND_APP_NAME = 'theme'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+# Backend de autenticación personalizado para soportar email o teléfono
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrPhoneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

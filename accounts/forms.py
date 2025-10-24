@@ -1,13 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm as DjangoPasswordResetForm
-from registration.forms import RegistrationForm
 
 from .models import User
 
-class UserCreationForm(RegistrationForm):
+class UserCreationForm(forms.ModelForm):
     """
-    Formulario de registro personalizado que extiende de RegistrationForm
-    para usar con django-registration-redux
+    Formulario de registro personalizado que permite registrarse con email O teléfono
     """
     email = forms.EmailField(
         label='Email',
@@ -54,10 +52,19 @@ class UserCreationForm(RegistrationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'phone', 'display_name', 'password1', 'password2')
+        fields = ('email', 'phone', 'display_name')
 
     def clean(self):
         cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        phone = cleaned_data.get("phone")
+        
+        # Normalizar campos vacíos a None
+        if email == "":
+            cleaned_data["email"] = None
+        if phone == "":
+            cleaned_data["phone"] = None
+        
         email = cleaned_data.get("email")
         phone = cleaned_data.get("phone")
         
@@ -69,14 +76,20 @@ class UserCreationForm(RegistrationForm):
     def clean_email(self):
         """Validar que el email no exista si se proporciona"""
         email = self.cleaned_data.get('email')
-        if email and User.objects.filter(email=email).exists():
+        # Si está vacío, retornar None
+        if not email or email == "":
+            return None
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Este email ya está registrado.")
         return email
     
     def clean_phone(self):
         """Validar que el teléfono no exista si se proporciona"""
         phone = self.cleaned_data.get('phone')
-        if phone and User.objects.filter(phone=phone).exists():
+        # Si está vacío, retornar None
+        if not phone or phone == "":
+            return None
+        if User.objects.filter(phone=phone).exists():
             raise forms.ValidationError("Este teléfono ya está registrado.")
         return phone
 

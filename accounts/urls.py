@@ -1,8 +1,7 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from registration.backends.simple.views import RegistrationView
-from .views import logout_view
-from .forms import UserCreationForm, CustomPasswordResetForm
+from .views import logout_view, SignupView
+from .forms import CustomPasswordResetForm
 
 urlpatterns = [
     # Login personalizado (usando el template existente)
@@ -13,12 +12,8 @@ urlpatterns = [
     # Logout personalizado
     path("logout/", logout_view, name="logout"),
     
-    # Registro usando django-registration con nuestro formulario personalizado
-    path("signup/", RegistrationView.as_view(
-        form_class=UserCreationForm,
-        template_name="accounts/signup.html",
-        success_url="/dashboard/"
-    ), name="signup"),
+    # Registro con vista personalizada
+    path("signup/", SignupView.as_view(), name="signup"),
     
     # Password reset views (usando templates personalizados)
     path("password-reset/", auth_views.PasswordResetView.as_view(
