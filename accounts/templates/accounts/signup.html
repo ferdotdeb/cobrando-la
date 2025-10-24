@@ -149,6 +149,7 @@
                         name="{{ form.display_name.name }}" 
                         id="{{ form.display_name.id_for_label }}"
                         value="{{ form.display_name.value|default:'' }}"
+                        maxlength="150"
                         autocomplete="name"
                         class="w-full px-4 py-3 rounded-xl bg-white/10 border {% if form.display_name.errors %}border-red-500/50{% else %}border-white/20{% endif %} text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#88BA41] focus:border-transparent transition duration-300 hover:bg-white/15"
                         placeholder="Tu nombre"

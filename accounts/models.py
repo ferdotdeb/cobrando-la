@@ -57,6 +57,10 @@ def _generate_public_slug(base: str | None = None) -> str:
     rand = get_random_string(6, allowed_chars="abcdefghijklmnopqrstuvwxyz0123456789")
     if base:
         base = slugify(base)
+        # Limitar el base para que base + "-" + rand no exceda 100 caracteres
+        # 100 (max) - 1 (guión) - 6 (rand) = 93 caracteres máximo para base
+        if len(base) > 93:
+            base = base[:93]
         return f"{base}-{rand}"
     return rand
 
@@ -65,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=20, unique=True, null=True, blank=True, default=None)
     display_name = models.CharField(max_length=150, blank=True, verbose_name="Nombre de usuario/Negocio") # Assignable name for the template
     public_slug = models.SlugField(
-        max_length=32,
+        max_length=100,
         unique=True,
         blank=True,
         validators=[validate_public_slug],  # ← añade el validador
