@@ -53,6 +53,19 @@ def detect_card_brand(number: str) -> str:
     return "Other"
 
 
+def validate_phone_number(phone: str) -> bool:
+    """
+    Valida número telefónico mexicano (formato: +52 seguido de 10 dígitos).
+    Acepta formatos: +521234567890, +52 123 456 7890, +52-123-456-7890
+    """
+    if not phone:
+        return False
+    # Normaliza: quita espacios, guiones y paréntesis
+    normalized = re.sub(r"[\s\-()]+", "", phone)
+    # Acepta +52 seguido de 10 dígitos o solo 10 dígitos
+    return bool(re.fullmatch(r"\+52\d{10}|\d{10}", normalized))
+
+
 # Mapeo mínimo (extiende cuando quieras)
 BANK_CODE_MAP = {
     "002": "Citibanamex",
@@ -67,6 +80,7 @@ BANK_CODE_MAP = {
 
 class BankDetails(models.Model):
     class Kind(models.TextChoices):
+        PHONE = "PHONE", "Phone"
         CLABE = "CLABE", "CLABE"
         CARD = "CARD", "Card"
         ACCOUNT = "ACCOUNT", "Account"
@@ -101,6 +115,10 @@ class BankDetails(models.Model):
     )
 
     alias = models.CharField(max_length=80, blank=True)
+    
+    # Número telefónico para WhatsApp (independiente del teléfono de registro)
+    phone = models.CharField(max_length=20, blank=True, help_text="Registra tu numero para poder recibir tus comprobantes de pago")
+    
     is_public = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -128,9 +146,37 @@ class BankDetails(models.Model):
         if self.value:
             self.value = re.sub(r"[\s\-]+", "", self.value)
 
+        # Valida y normaliza el número telefónico si está presente
+        if self.phone:
+            # Normaliza: quita espacios, guiones y paréntesis
+            self.phone = re.sub(r"[\s\-()]+", "", self.phone)
+            if not validate_phone_number(self.phone):
+                raise ValidationError({"phone": "El número telefónico debe ser un número mexicano válido (10 dígitos o +52 seguido de 10 dígitos)."})
+            # Asegura que siempre esté en formato +52XXXXXXXXXX
+            if not self.phone.startswith("+52"):
+                self.phone = f"+52{self.phone}"
+
         val = self.value or ""
 
-        if self.kind == self.Kind.CLABE:
+        if self.kind == self.Kind.PHONE:
+            # Para tipo PHONE, validamos el campo value como número telefónico
+            if not val:
+                raise ValidationError({"value": "El número de WhatsApp es requerido."})
+            # Normaliza: quita espacios, guiones y paréntesis del value
+            self.value = re.sub(r"[\s\-()]+", "", self.value)
+            val = self.value
+            if not validate_phone_number(val):
+                raise ValidationError({"value": "El número telefónico debe ser un número mexicano válido (10 dígitos o +52 seguido de 10 dígitos)."})
+            # Asegura que siempre esté en formato +52XXXXXXXXXX
+            if not val.startswith("+52"):
+                self.value = f"+52{val}"
+            # Limpia campos que no aplican
+            self.bank_code = ""
+            self.bank_name = ""
+            self.brand = ""
+            self.phone = ""  # El número ya está en value
+
+        elif self.kind == self.Kind.CLABE:
             if not re.fullmatch(r"\d{18}", val):
                 raise ValidationError({"value": "La CLABE Interbancaria debe tener exactamente 18 dígitos."})
             if not clabe_checksum_ok(val):
@@ -179,6 +225,8 @@ class BankDetails(models.Model):
         v = self.value or ""
         if not v:
             return ""
+        if self.kind == self.Kind.PHONE:
+            return v  # Muestra el número completo para WhatsApp
         if self.kind == self.Kind.CARD:
             return f"{'*' * 12}{v[-4:]}"  # **** **** **** 1234
         if self.kind == self.Kind.CLABE:
