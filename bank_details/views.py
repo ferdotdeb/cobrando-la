@@ -22,6 +22,7 @@ def dashboard(request):
     Kind = BankDetails.Kind
 
     kind_labels = {
+        Kind.PHONE: "Número de WhatsApp",
         Kind.CLABE: "CLABE interbancaria",
         Kind.CARD: "Tarjeta de débito",
         Kind.ACCOUNT: "Cuenta bancaria",
@@ -30,18 +31,20 @@ def dashboard(request):
     def _get_instance(k):
         return BankDetails.objects.filter(owner=request.user, kind=k).first()
 
+    phone_inst = _get_instance(Kind.PHONE)
     clabe_inst = _get_instance(Kind.CLABE)
     card_inst = _get_instance(Kind.CARD)
     acct_inst = _get_instance(Kind.ACCOUNT)
 
     if request.method == "POST":
         form_kind = request.POST.get("form_kind")
-        if form_kind not in {Kind.CLABE, Kind.CARD, Kind.ACCOUNT}:
+        if form_kind not in {Kind.PHONE, Kind.CLABE, Kind.CARD, Kind.ACCOUNT}:
             messages.error(request, "Tipo de formulario inválido.")
             return redirect("dashboard")
 
         # Escoge la instancia según el kind:
         inst_map = {
+            Kind.PHONE: phone_inst,
             Kind.CLABE: clabe_inst,
             Kind.CARD: card_inst,
             Kind.ACCOUNT: acct_inst,
@@ -56,7 +59,7 @@ def dashboard(request):
         if form.is_valid():
             try:
                 form.save(owner=request.user, kind=form_kind)
-                messages.success(request, f"{kind_labels[form_kind]} guardada correctamente.")
+                messages.success(request, f"{kind_labels[form_kind]} actualizado correctamente.")
                 return redirect("dashboard")  # PRG: evita re-envíos
             except Exception as e:
                 messages.error(request, f"Error al guardar: {e}")
@@ -64,6 +67,7 @@ def dashboard(request):
             messages.error(request, "Por favor, corrija los errores a continuación.")
         # Si hay errores, volvemos a construir los otros forms "en limpio"
         other_forms = {
+            Kind.PHONE: BankDetailsForm(instance=phone_inst, initial={'kind': Kind.PHONE}),
             Kind.CLABE: BankDetailsForm(instance=clabe_inst, initial={'kind': Kind.CLABE}),
             Kind.CARD: BankDetailsForm(instance=card_inst, initial={'kind': Kind.CARD}),
             Kind.ACCOUNT: BankDetailsForm(instance=acct_inst, initial={'kind': Kind.ACCOUNT}),
@@ -75,12 +79,13 @@ def dashboard(request):
             {
                 "owner": request.user,
                 "forms": other_forms,
-                "instances": {"clabe": clabe_inst, "card": card_inst, "account": acct_inst},
+                "instances": {"phone": phone_inst, "clabe": clabe_inst, "card": card_inst, "account": acct_inst},
             },
         )
 
     # GET
     forms = {
+        Kind.PHONE: BankDetailsForm(instance=phone_inst, initial={'kind': Kind.PHONE}),
         Kind.CLABE: BankDetailsForm(instance=clabe_inst, initial={'kind': Kind.CLABE}),
         Kind.CARD: BankDetailsForm(instance=card_inst, initial={'kind': Kind.CARD}),
         Kind.ACCOUNT: BankDetailsForm(instance=acct_inst, initial={'kind': Kind.ACCOUNT}),
@@ -91,6 +96,6 @@ def dashboard(request):
         {
             "owner": request.user,
             "forms": forms,
-            "instances": {"clabe": clabe_inst, "card": card_inst, "account": acct_inst},
+            "instances": {"phone": phone_inst, "clabe": clabe_inst, "card": card_inst, "account": acct_inst},
         },
     )
