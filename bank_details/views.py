@@ -22,7 +22,7 @@ def dashboard(request):
     Kind = BankDetails.Kind
 
     kind_labels = {
-        Kind.PHONE: "Número de WhatsApp",
+        Kind.PHONE: "Cuenta de WhatsApp",
         Kind.CLABE: "CLABE interbancaria",
         Kind.CARD: "Tarjeta de débito",
         Kind.ACCOUNT: "Cuenta bancaria",
@@ -59,7 +59,7 @@ def dashboard(request):
         if form.is_valid():
             try:
                 form.save(owner=request.user, kind=form_kind)
-                messages.success(request, f"{kind_labels[form_kind]} actualizado correctamente.")
+                messages.success(request, f"{kind_labels[form_kind]} actualizada correctamente.")
                 return redirect("dashboard")  # PRG: evita re-envíos
             except Exception as e:
                 messages.error(request, f"Error al guardar: {e}")
