@@ -74,7 +74,8 @@ BANK_CODE_MAP = {
     "021": "HSBC",
     "072": "Banorte",
     "638": "Nu Bank",
-    "722": "Mercado Pago"
+    "722": "Mercado Pago",
+    "130": "Compartamos Banco"
     # TODO: añadir mas codigos de bancos
 }
 

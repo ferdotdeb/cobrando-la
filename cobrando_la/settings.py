@@ -26,7 +26,13 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ["www.cobrando.lat"]
+ALLOWED_HOSTS = [
+    "www.cobrando.lat",
+    "cobrando.lat",
+    "alttab-dev.symt.mx",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -188,3 +194,32 @@ RESERVED_PUBLIC_SLUGS = {
     "admin", "u", "accounts", "login", "logout", "signup",
     "dashboard", "static", "media", "api", "robots.txt", "favicon.ico",
 }
+
+# CSRF Configuration for Production
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.cobrando.lat",
+    "https://cobrando.lat",
+    "https://alttab-dev.symt.mx",
+    "http://alttab-dev.symt.mx",
+]
+
+# Security settings for HTTPS (production)
+# Solo aplicar si estás 100% seguro de que HTTPS está configurado correctamente
+if not DEBUG:
+    # Detectar si viene a través de un proxy (X-Forwarded-Proto)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Aplicar solo si tienes HTTPS real configurado
+    # CSRF_COOKIE_SECURE = True
+    # SESSION_COOKIE_SECURE = True
+    # SECURE_SSL_REDIRECT = True  # Esto causa los redirects infinitos
+    
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_HTTPONLY = True
+    # SECURE_HSTS_SECONDS = 31536000
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
+else:
+    # En desarrollo
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
